@@ -14,4 +14,4 @@ dependencies:
       - pyyaml 
       - tqdm 
       - transformers
-      - mlruns
+      - mlflow
