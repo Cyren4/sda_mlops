@@ -1,0 +1,17 @@
+name: lstm_mlflow
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - pip
+  - pip:
+      - torch 
+      - numpy 
+      - pandas
+      - matplotlib
+      - seaborn 
+      - scikit-learn 
+      - pyyaml 
+      - tqdm 
+      - transformers
+      - mlruns
