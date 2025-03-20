@@ -15,3 +15,6 @@ dependencies:
       - tqdm 
       - transformers
       - mlflow
+      - jinja2
+      - flask
+      - setuptools
