@@ -14,4 +14,7 @@ dependencies:
       - pyyaml 
       - tqdm 
       - transformers
-      - mlruns
+      - mlflow
+      - jinja2
+      - flask
+      - setuptools
