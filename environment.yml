@@ -1,4 +1,4 @@
-name: ltsm_mlflow
+name: lstm_mlflow
 channels:
   - conda-forge
   - defaults
