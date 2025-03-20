@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/yoavcohen/Desktop/sda_mlops/src/mlruns/0/b2374dcc38d24440aa9024b519ac8938/artifacts
+end_time: 1742503275145
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: b2374dcc38d24440aa9024b519ac8938
+run_name: righteous-swan-594
+run_uuid: b2374dcc38d24440aa9024b519ac8938
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1742502964534
+status: 3
+tags: []
+user_id: yoavcohen

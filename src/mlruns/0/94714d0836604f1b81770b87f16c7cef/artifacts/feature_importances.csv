@@ -1,0 +1,7 @@
+Feature,Importance
+credit_lines_outstanding,0.5594004948929291
+total_debt_outstanding,0.3111666172772748
+years_employed,0.04953061876772026
+fico_score,0.03990158580921965
+income,0.028144184041225546
+loan_amt_outstanding,0.011856499211630745

@@ -1,0 +1,22 @@
+{
+  "dataframe_split": {
+    "columns": [
+      "credit_lines_outstanding",
+      "loan_amt_outstanding",
+      "total_debt_outstanding",
+      "income",
+      "years_employed",
+      "fico_score"
+    ],
+    "data": [
+      [
+        0,
+        3751.658863,
+        4115.745261,
+        69070.34542,
+        7,
+        706
+      ]
+    ]
+  }
+}

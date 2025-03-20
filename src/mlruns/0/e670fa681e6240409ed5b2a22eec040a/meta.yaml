@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/yoavcohen/Desktop/sda_mlops/src/mlruns/0/e670fa681e6240409ed5b2a22eec040a/artifacts
+end_time: 1742503312614
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: e670fa681e6240409ed5b2a22eec040a
+run_name: delicate-hog-375
+run_uuid: e670fa681e6240409ed5b2a22eec040a
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1742503276784
+status: 3
+tags: []
+user_id: yoavcohen

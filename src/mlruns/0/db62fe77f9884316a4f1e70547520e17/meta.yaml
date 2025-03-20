@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/yoavcohen/Desktop/sda_mlops/src/mlruns/0/db62fe77f9884316a4f1e70547520e17/artifacts
+end_time: 1742502788018
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: db62fe77f9884316a4f1e70547520e17
+run_name: bald-ray-792
+run_uuid: db62fe77f9884316a4f1e70547520e17
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1742502785324
+status: 3
+tags: []
+user_id: yoavcohen
