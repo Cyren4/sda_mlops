@@ -26,7 +26,7 @@ conda activate banking-mlops
 
 3.  Launch streamlit application : 
 ```
-streamlit run app.py
+streamlit run src/app.py
 ```
 
 4. Launch mlflow server and run all cells in the file `mlflow_test.ipynb`
@@ -35,10 +35,30 @@ mlflow server --host 127.0.0.1 --port 8080
 ```
 
 
-## Deployement 
+## Manual Deployement 
 
-- This repo containerised version it push in dockerhub [cramdani/sda_mlops_docker](https://hub.docker.com/r/cramdani/sda_mlops_docker) 
-- Get its image  : 
+- Build the Docker image: 
+```bash
+docker build -t banking-mlops-app .
+```
+
+- Run the Docker image (NB: streamlit uses the port 8501)
+```bash
+docker run -p 8501:8501 banking-mlops-app
+```
+
+Comments : This maps port 8501 on your host machine to port 8501 in the container (the port Streamlit uses). You should then be able to access your Streamlit app in your browser at ``http://localhost:8501``.
+
+- Push this image to dockerhub: 
+```bash
+docker login 
+docker image tag mlops:latest cramdani/sda_mlops_docker
+docker push cramdani/sda_mlops_docker  
+```
+
+- Repo to track the images : [cramdani/sda_mlops_docker](https://hub.docker.com/r/cramdani/sda_mlops_docker) 
+
+- Get its images  : 
 ```shell
 docker pull cramdani/sda_mlops_docker
 ```
@@ -60,10 +80,17 @@ docker pull cramdani/sda_mlops_docker
 │   └── Loan_Data_Preprocessed.csv
 ├── environment.yml
 ├── src
-│   ├── Mlflow.ipynb
-│   ├── Preprocessing.ipynb
-│   ├── Random Forest
-│   └── __init__.py
+│   ├── app.py
+│   ├── components
+│   │   ├── __init__.py
+│   │   ├── __pycache__
+│   │   │   ├── __init__.py
+│   │   │   └── header.py
+│   │   └── header.py
+│   └── models
+│       ├── Mlflow.ipynb
+│       ├── Preprocessing.ipynb
+│       └── __init__.py
 └── vis_data.ipynb
 ```
 
@@ -76,3 +103,7 @@ docker pull cramdani/sda_mlops_docker
 
 
 This project is a student project fulfilling the requirements of a MLOps Course.
+
+
+## Source documentation
+- [Run conda in Dockerfile](https://pythonspeed.com/articles/activate-conda-dockerfile/) 
