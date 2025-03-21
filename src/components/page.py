@@ -65,7 +65,7 @@ def random_forest(run_ID, rf_model):
             except IndexError:
                 st.warning(f"⚠️ Erreur : Le fichier accuracy est vide ou mal formaté. Contenu : {content}")
             except ValueError:
-                st.warning(f"⚠️ Erreur : La valeur d'accuracy '{accuracy_str}' dans le fichier n'est pas un nombre valide.")
+                st.warning(f"⚠️ Erreur : La valeur d'accuracy '{accuracy}' dans le fichier n'est pas un nombre valide.")
             except PermissionError:
                 st.warning(f"⚠️ Erreur : Vous n'avez pas la permission de lire le fichier : {metrics_path}/accuracy")
             except Exception as e:
