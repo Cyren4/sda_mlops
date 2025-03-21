@@ -1,0 +1,15 @@
+torch
+numpy
+pandas
+matplotlib
+seaborn
+scikit-learn
+pyyaml
+tqdm
+transformers
+mlflow
+jinja2
+flask
+setuptools
+streamlit
+graphviz
