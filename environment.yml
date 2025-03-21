@@ -20,6 +20,5 @@ dependencies:
       - setuptools
       - streamlit
       - graphviz
-
-  - brew: 
+  - conda:
       - graphviz
