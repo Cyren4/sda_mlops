@@ -24,7 +24,12 @@ conda env create -f environment.yml
 conda activate banking-mlops
 ```
 
-3.  Launch mlflow server and run all cells in the file `mlflow_test.ipynb`
+3.  Launch streamlit application : 
+```
+streamlit run app.py
+```
+
+4. Launch mlflow server and run all cells in the file `mlflow_test.ipynb`
 ```shell
 mlflow server --host 127.0.0.1 --port 8080
 ```
@@ -36,6 +41,30 @@ mlflow server --host 127.0.0.1 --port 8080
 - Get its image  : 
 ```shell
 docker pull cramdani/sda_mlops_docker
+```
+
+- Streamlit application 
+
+
+## File structure 
+```
+├── README.md
+├── assets
+│   └── __init__.py
+├── bin
+│   └── dataloader.py
+├── config
+│   └── config.yml
+├── data
+│   ├── Loan_Data.csv
+│   └── Loan_Data_Preprocessed.csv
+├── environment.yml
+├── src
+│   ├── Mlflow.ipynb
+│   ├── Preprocessing.ipynb
+│   ├── Random Forest
+│   └── __init__.py
+└── vis_data.ipynb
 ```
 
 ## Contributors 
