@@ -1,6 +1,5 @@
 import streamlit as st
 import pandas as pd
-import mlflow.pyfunc
 import os
 
 # === PAGE 1 : INTRODUCTION ===
@@ -56,7 +55,7 @@ def random_forest(run_ID, rf_model):
             
             # Lire et afficher l'accuracy
             try:
-                with open(f"{metrics_path}/accuracy", "r") as file:
+                with open(f"{metrics_path}/accuracy", "r", encoding="utf-8") as file:
                     content = file.read().strip()
                     # Récupérer la deuxième valeur 
                     accuracy = float(content.split()[1])  # Sépare par espace et prend la deuxième valeur
