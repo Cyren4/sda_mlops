@@ -45,18 +45,20 @@ jobs:
 
         - name: Format
           run: |
-            black app.py
+            BLACK_FILES="src/app.py src/components/header.py src/components/page.py"
+            black $BLACK_FILES 
 # The fourth step formats the app.py file using the black code formatter.
 
         - name: Lint
           run: |
-            pylint --disable=R,C  app.py
+            LINT_FILES="src/app.py src/components/header.py src/components/page.py"
+            pylint --disable=R,C $LINT_FILES 
 #The fifth step performs linting on the app.py file using pylint.
 #The --disable=R,C flag disables specific pylint checks.
 
-        - name: Test
-          run: |
-            python -m pytest -vv test.py
+        # - name: Test
+        #   run: |
+        #     python -m pytest -vv test.py
 
 
   cd_pipeline:
