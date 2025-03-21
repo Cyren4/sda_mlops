@@ -52,7 +52,7 @@ Comments : This maps port 8501 on your host machine to port 8501 in the containe
 - Push this image to dockerhub: 
 ```bash
 docker login 
-docker image tag mlops:latest cramdani/sda_mlops_docker
+docker image tag banking-mlops:latest cramdani/sda_mlops_docker
 docker push cramdani/sda_mlops_docker  
 ```
 
