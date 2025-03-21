@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/hoangthuyduongvu/Desktop/sda_mlops/src/models/mlruns/0/f4b10d78d954436282b762837ea61527/artifacts
+end_time: 1742595046696
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: f4b10d78d954436282b762837ea61527
+run_name: puzzled-gull-790
+run_uuid: f4b10d78d954436282b762837ea61527
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1742595001189
+status: 3
+tags: []
+user_id: hoangthuyduongvu
