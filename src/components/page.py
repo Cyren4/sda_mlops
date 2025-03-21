@@ -49,8 +49,8 @@ def random_forest(run_ID, rf_model):
     if rf_page == "📊 Performance Random Forest":
         # Charger les métriques sauvegardées
         st.subheader("📊 Performance du Modèle Random Forest")
-        metrics_path = f"{run_ID}/metrics"
-        artifacts_path = os.getcwd() + "/images" # remove "/src si on run streamlit depuis src folder"
+        artifacts_path = f"{os.getcwd()}/src/mlruns/0/{run_ID}/artifacts" 
+        metrics_path = f"{os.getcwd()}/src/mlruns/0/{run_ID}/metrics"
 
         if os.path.exists(f"{metrics_path}/accuracy"):
             
@@ -73,28 +73,28 @@ def random_forest(run_ID, rf_model):
         if os.path.exists(cm_path):
             st.image(cm_path, caption="Matrice de Confusion")
         else:
-            st.warning("⚠️ Matrice de confusion introuvable.")
+            st.warning("⚠️ Matrice de confusion introuvable : " + cm_path)
 
         st.subheader("📈 Courbe ROC")
         roc_path = f"{artifacts_path}/roc_curve.png"
         if os.path.exists(roc_path):
             st.image(roc_path, caption="Courbe ROC")
         else:
-            st.warning("⚠️ Courbe ROC introuvable.")
+            st.warning("⚠️ Courbe ROC introuvable : " + cm_path)
 
         st.subheader("📉 Courbe Précision-Rappel")
         pr_path = f"{artifacts_path}/precision_recall_curve.png"
         if os.path.exists(pr_path):
             st.image(pr_path, caption="Courbe Précision-Rappel")
         else:
-            st.warning("⚠️ Courbe Précision-Rappel introuvable.")
+            st.warning("⚠️ Courbe Précision-Rappel introuvable : " + cm_path)
 
         st.subheader("💡 Importance des Features")
         fi_path = f"{artifacts_path}/feature_importances.png"
         if os.path.exists(fi_path):
             st.image(fi_path, caption="Importance des Features")
         else:
-            st.warning("⚠️ Importance des Features introuvable.")
+            st.warning("⚠️ Importance des Features introuvable : " + cm_path)
 
     elif rf_page == "🤖 Prédiction Random Forest":
         st.title("🤖 Prédiction du défaut de paiement - Random Forest")
