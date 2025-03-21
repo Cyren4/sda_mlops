@@ -60,8 +60,16 @@ def random_forest(run_ID, rf_model):
                     # Récupérer la deuxième valeur 
                     accuracy = float(content.split()[1])  # Sépare par espace et prend la deuxième valeur
                     st.metric("🎯 Accuracy", f"{accuracy:.2%}")
+            except FileNotFoundError:
+                st.warning(f"⚠️ Erreur : Le fichier accuracy est introuvable à l'emplacement : {metrics_path}/accuracy")
+            except IndexError:
+                st.warning(f"⚠️ Erreur : Le fichier accuracy est vide ou mal formaté. Contenu : {content}")
+            except ValueError:
+                st.warning(f"⚠️ Erreur : La valeur d'accuracy '{accuracy_str}' dans le fichier n'est pas un nombre valide.")
+            except PermissionError:
+                st.warning(f"⚠️ Erreur : Vous n'avez pas la permission de lire le fichier : {metrics_path}/accuracy")
             except Exception as e:
-                st.warning(f"⚠️ Erreur lors du chargement de l'accuracy : {e}")
+                st.warning(f"⚠️ Erreur inattendue : {e}")
 
         else:
             st.write("❌ Le fichier accuracy est introuvable.")
