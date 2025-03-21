@@ -20,7 +20,7 @@ COPY data/ /app/data/
 COPY config/ /app/config/
 
 # Expose the port Streamlit uses
-EXPOSE 8601
+EXPOSE 8501
 
 # Run the Streamlit app
 # CMD ["streamlit", "run", "src/app.py"]

@@ -42,7 +42,7 @@ mlflow server --host 127.0.0.1 --port 8080
 docker build -t banking-mlops-app .
 ```
 
-- Run the Docker image
+- Run the Docker image (NB: streamlit uses the port 8501)
 ```bash
 docker run -p 8501:8501 banking-mlops-app
 ```
