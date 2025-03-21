@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/yoavcohen/Desktop/sda_mlops/src/mlruns/0/db7463b5565641bda6967a358015e99f/artifacts
+end_time: 1742500370126
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: db7463b5565641bda6967a358015e99f
+run_name: gifted-pig-720
+run_uuid: db7463b5565641bda6967a358015e99f
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1742500363243
+status: 3
+tags: []
+user_id: yoavcohen

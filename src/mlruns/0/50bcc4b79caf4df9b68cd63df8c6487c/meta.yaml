@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/yoavcohen/Desktop/sda_mlops/src/mlruns/0/50bcc4b79caf4df9b68cd63df8c6487c/artifacts
+end_time: 1742502369677
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 50bcc4b79caf4df9b68cd63df8c6487c
+run_name: dazzling-sloth-876
+run_uuid: 50bcc4b79caf4df9b68cd63df8c6487c
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1742502356899
+status: 3
+tags: []
+user_id: yoavcohen

@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/yoavcohen/Desktop/sda_mlops/src/mlruns/0/4e381283b95c47acae90d1ca35703a05/artifacts
+end_time: 1742500363227
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 4e381283b95c47acae90d1ca35703a05
+run_name: dapper-ant-281
+run_uuid: 4e381283b95c47acae90d1ca35703a05
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1742500255445
+status: 3
+tags: []
+user_id: yoavcohen

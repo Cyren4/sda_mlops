@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/yoavcohen/Desktop/sda_mlops/src/mlruns/0/e4631371ac2544b587164e4f9074f25a/artifacts
+end_time: 1742503437554
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: e4631371ac2544b587164e4f9074f25a
+run_name: monumental-tern-805
+run_uuid: e4631371ac2544b587164e4f9074f25a
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1742503422588
+status: 3
+tags: []
+user_id: yoavcohen

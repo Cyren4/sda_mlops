@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/yoavcohen/Desktop/sda_mlops/src/mlruns/0/90be602831644c76be796d303a6908e9/artifacts
+end_time: 1742503415344
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 90be602831644c76be796d303a6908e9
+run_name: gaudy-bear-632
+run_uuid: 90be602831644c76be796d303a6908e9
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1742503412367
+status: 3
+tags: []
+user_id: yoavcohen

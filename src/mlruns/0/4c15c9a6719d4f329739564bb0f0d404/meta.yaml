@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/yoavcohen/Desktop/sda_mlops/src/mlruns/0/4c15c9a6719d4f329739564bb0f0d404/artifacts
+end_time: 1742503492622
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 4c15c9a6719d4f329739564bb0f0d404
+run_name: skittish-mink-592
+run_uuid: 4c15c9a6719d4f329739564bb0f0d404
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1742503487395
+status: 3
+tags: []
+user_id: yoavcohen

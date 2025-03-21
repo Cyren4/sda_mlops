@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/yoavcohen/Desktop/sda_mlops/src/mlruns/0/fabe73f217994be3b1cfa5b3b9f9570a/artifacts
+end_time: 1742502654992
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: fabe73f217994be3b1cfa5b3b9f9570a
+run_name: likeable-loon-163
+run_uuid: fabe73f217994be3b1cfa5b3b9f9570a
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1742502504523
+status: 3
+tags: []
+user_id: yoavcohen

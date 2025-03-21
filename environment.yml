@@ -1,4 +1,4 @@
-name: lstm_mlflow
+name: banking-mlops
 channels:
   - conda-forge
   - defaults
@@ -18,3 +18,4 @@ dependencies:
       - jinja2
       - flask
       - setuptools
+      - streamlit

@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/yoavcohen/Desktop/sda_mlops/src/mlruns/0/0175ce13c1784f21ac154929619c1992/artifacts
+end_time: 1742506576325
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 0175ce13c1784f21ac154929619c1992
+run_name: placid-hog-407
+run_uuid: 0175ce13c1784f21ac154929619c1992
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1742505959723
+status: 3
+tags: []
+user_id: yoavcohen
