@@ -19,3 +19,7 @@ dependencies:
       - flask
       - setuptools
       - streamlit
+      - graphviz
+
+  - brew: 
+      - graphviz

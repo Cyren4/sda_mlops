@@ -50,8 +50,7 @@ def random_forest(run_ID, rf_model):
         # Charger les métriques sauvegardées
         st.subheader("📊 Performance du Modèle Random Forest")
         metrics_path = f"{run_ID}/metrics"
-        # artifacts_path = f"{run_ID}/artifacts"
-        artifacts_path = f"/Users/cyrena/Desktop/2024_Data_course/mlops_tp/sda_mlops/images"
+        artifacts_path = os.getcwd() + "/images" # remove "/src si on run streamlit depuis src folder"
 
         if os.path.exists(f"{metrics_path}/accuracy"):
             
