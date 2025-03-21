@@ -3,26 +3,10 @@ import pandas as pd
 import mlflow.pyfunc
 import os
 
-# === CONFIGURATION DE LA PAGE ===
-st.set_page_config(page_title="Banking MLOps - Prédiction du défaut de paiement", layout="wide")
-
-# === CONFIGURATION MLflow === 
-RUN_ID = "e4631371ac2544b587164e4f9074f25a"  # Remplace par l'ID de ton modèle correct
-MODEL_URI = f"/workspaces/sda_mlops/src/mlruns/0/{RUN_ID}/artifacts/random_forest_model"
-
-# === CHARGER LE MODÈLE RANDOM FOREST MLflow ===
-@st.cache_resource
-def load_model():
-    return mlflow.pyfunc.load_model(MODEL_URI)
-
-rf_model = load_model()
-
-# === BARRE DE NAVIGATION ===
-st.sidebar.title("Navigation")
-main_page = st.sidebar.radio("Sélectionner une section", ["🏦 Introduction", "📈 Modèle LSTM", "🌲 Modèle Random Forest"])
-
 # === PAGE 1 : INTRODUCTION ===
-if main_page == "🏦 Introduction":
+def introduction():
+    """Displays the INTRODUCTION page of the app."""
+
     st.title("🏦 Banking MLOps : Predicting Loan Defaults in Retail Banking")
     
     st.markdown("""
@@ -41,7 +25,9 @@ if main_page == "🏦 Introduction":
     """)
 
 # === PAGE 2 : MODÈLE LSTM ===
-elif main_page == "📈 Modèle LSTM":
+def lstm():
+    """Displays the main page of the app."""
+   
     st.title("📈 Modèle LSTM - Analyse des performances")
 
     lstm_page = st.sidebar.radio("Sous-section", ["📊 Performance LSTM", "🤖 Prédiction LSTM"])
@@ -54,7 +40,8 @@ elif main_page == "📈 Modèle LSTM":
         st.markdown("🚧 **Page en construction** : La prédiction avec le modèle LSTM sera bientôt disponible.")
 
 # === PAGE 3 : MODÈLE RANDOM FOREST ===
-elif main_page == "🌲 Modèle Random Forest":
+def random_forest(run_ID, rf_model):
+    """Displays the main page of the app."""
     st.title("🌲 Modèle Random Forest - Analyse des performances")
 
     rf_page = st.sidebar.radio("Sous-section", ["📊 Performance Random Forest", "🤖 Prédiction Random Forest"])
@@ -62,8 +49,9 @@ elif main_page == "🌲 Modèle Random Forest":
     if rf_page == "📊 Performance Random Forest":
         # Charger les métriques sauvegardées
         st.subheader("📊 Performance du Modèle Random Forest")
-        metrics_path = f"/workspaces/sda_mlops/src/mlruns/0/{RUN_ID}/metrics"
-        artifacts_path = f"/workspaces/sda_mlops/src/mlruns/0/{RUN_ID}/artifacts"
+        metrics_path = f"{run_ID}/metrics"
+        # artifacts_path = f"{run_ID}/artifacts"
+        artifacts_path = f"/Users/cyrena/Desktop/2024_Data_course/mlops_tp/sda_mlops/images"
 
         if os.path.exists(f"{metrics_path}/accuracy"):
             
@@ -148,3 +136,4 @@ elif main_page == "🌲 Modèle Random Forest":
             resultat = "⚠️ Risque de défaut de paiement !" if prediction[0] == 1 else "✅ Aucun risque détecté."
             st.subheader("Résultat de la prédiction")
             st.write(resultat)
+
