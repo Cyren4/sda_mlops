@@ -26,7 +26,7 @@ conda activate banking-mlops
 
 3.  Launch streamlit application : 
 ```
-streamlit run app.py
+streamlit run src/app.py
 ```
 
 4. Launch mlflow server and run all cells in the file `mlflow_test.ipynb`
@@ -60,10 +60,17 @@ docker pull cramdani/sda_mlops_docker
 │   └── Loan_Data_Preprocessed.csv
 ├── environment.yml
 ├── src
-│   ├── Mlflow.ipynb
-│   ├── Preprocessing.ipynb
-│   ├── Random Forest
-│   └── __init__.py
+│   ├── app.py
+│   ├── components
+│   │   ├── __init__.py
+│   │   ├── __pycache__
+│   │   │   ├── __init__.py
+│   │   │   └── header.py
+│   │   └── header.py
+│   └── models
+│       ├── Mlflow.ipynb
+│       ├── Preprocessing.ipynb
+│       └── __init__.py
 └── vis_data.ipynb
 ```
 
