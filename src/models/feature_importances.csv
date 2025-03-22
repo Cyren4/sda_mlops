@@ -1,0 +1,8 @@
+Feature,Importance
+debt_to_income_ratio,0.4324824677079461
+credit_lines_outstanding,0.32249976252139584
+total_debt_outstanding,0.156674796870285
+years_employed,0.03724824008946294
+fico_score,0.032290873658809546
+income,0.010610765059303265
+loan_amt_outstanding,0.008193094092797358

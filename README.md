@@ -86,8 +86,7 @@ gcloud builds submit --tag  $REGION-docker.pkg.dev/$PROJECT_ID/banking-mlops/mlo
 
 - Deploy the Docker image to Cloud Run:
 ```bash
-gcloud run deploy banking-mlops \
-    --image europe-west1-docker.pkg.dev/appmod-demo-lvl/banking-mlops/mlops-apps@sha256:484a105f786fb5accc31e553140943afaa72a8682653803c2a5cac05f68e036f
+gcloud run deploy banking-mlops --image $REGION-docker.pkg.dev/$PROJECT_ID/banking-mlops/mlops-app:latest --region $REGION
 ```
 
 
