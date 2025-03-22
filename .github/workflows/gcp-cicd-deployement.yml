@@ -10,11 +10,17 @@ env:
 on:
   push:
     branches:
-      - main
+      - cyrena-cd
 
 jobs:
   dockerize-and-deploy:
     runs-on: ubuntu-latest
+
+  job_id:
+    # Add "id-token" with the intended permissions.
+    permissions:
+      contents: 'read'
+      id-token: 'write'
 
     steps:
       - name: Checkout repository
@@ -33,6 +39,10 @@ jobs:
 
       - name: Set up Cloud SDK
         uses: 'google-github-actions/setup-gcloud@v2'
+        with:
+          version: '>= 363.0.0'
+
+      
 
       - name: Configure Docker
         run: |
