@@ -29,22 +29,22 @@ conda activate banking-mlops
 streamlit run src/app.py
 ```
 
-4. Launch mlflow server and run all cells in the file `mlflow_test.ipynb`
+4. Launch mlflow server and run all cells in the file `Mlflow.ipynb`
 ```shell
 mlflow server --host 127.0.0.1 --port 8080
 ```
 
 
-## Manual Deployement 
+## Manual Build of Docker Image 
 
 - Build the Docker image: 
 ```bash
 docker build -t banking-mlops-app .
 ```
 
-- Run the Docker image (NB: streamlit uses the port 8501)
+- Run the Docker image (NB: streamlit uses the port 8501 but we redirected to 8080)
 ```bash
-docker run -p 8501:8501 banking-mlops-app
+docker run -p 8080:8080 banking-mlops-app
 ```
 
 Comments : This maps port 8501 on your host machine to port 8501 in the container (the port Streamlit uses). You should then be able to access your Streamlit app in your browser at ``http://localhost:8501``.
@@ -59,39 +59,61 @@ docker push cramdani/sda_mlops_docker
 - Repo to track the images : [cramdani/sda_mlops_docker](https://hub.docker.com/r/cramdani/sda_mlops_docker) 
 
 - Get its images  : 
-```shell
+```bash
 docker pull cramdani/sda_mlops_docker
 ```
 
-- Streamlit application 
+## Manual Deployement to Cloud Run 
+
+- Set up environment variable : 
+```bash
+export PROJECT_ID=
+export REGION=europe-west1
+```
+
+- Connect to GCP and to the right project:
+```bash
+gcloud auth login
+gcloud config set project $PROJECT_ID
+gcloud auth configure-docker $REGION-docker.pkg.dev
+
+```
+
+- Build and push the Docker image to Artifact Registry:
+```bash
+gcloud builds submit --tag  $REGION-docker.pkg.dev/$PROJECT_ID/banking-mlops/mlops-app:latest
+```
+
+- Deploy the Docker image to Cloud Run:
+```bash
+gcloud run deploy banking-mlops \
+    --image europe-west1-docker.pkg.dev/appmod-demo-lvl/banking-mlops/mlops-apps@sha256:484a105f786fb5accc31e553140943afaa72a8682653803c2a5cac05f68e036f
+```
 
 
 ## File structure 
 ```
 ├── README.md
-├── assets
-│   └── __init__.py
-├── bin
-│   └── dataloader.py
-├── config
-│   └── config.yml
+├── .github/workflows
+│   └── github-cicd.py
 ├── data
+│   ├── feature_importances.csv
 │   ├── Loan_Data.csv
 │   └── Loan_Data_Preprocessed.csv
 ├── environment.yml
 ├── src
 │   ├── app.py
 │   ├── components
-│   │   ├── __init__.py
-│   │   ├── __pycache__
-│   │   │   ├── __init__.py
-│   │   │   └── header.py
-│   │   └── header.py
+│   │   ├── header.py
+│   │   ├── introduction.py
+│   │   ├── lstm.py
+│   │   ├── page.py
+│   │   └── random_forest.py
 │   └── models
 │       ├── Mlflow.ipynb
-│       ├── Preprocessing.ipynb
-│       └── __init__.py
-└── vis_data.ipynb
+│       └── Preprocessing.ipynb
+├── .dockerignore.ipynb
+└── .gitignore.ipynb
 ```
 
 ## Contributors 
