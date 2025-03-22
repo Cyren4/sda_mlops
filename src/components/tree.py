@@ -13,6 +13,14 @@ def arbre(run_ID, arbre):
         artifacts_path = f"{os.getcwd()}/src/models/mlruns_tree/0/{run_ID}/artifacts" 
         metrics_path = f"{os.getcwd()}/src/models/mlruns_tree/0/{run_ID}/metrics"
 
+
+        st.subheader("Tree structure")
+        roc_path = f"{artifacts_path}/arbre.png"
+        if os.path.exists(roc_path):
+            st.image(roc_path)
+        else:
+            st.warning("Structure de l'arbre introuvable : " + roc_path)
+
         # Affichage des images enregistrées dans MLflow
         st.subheader("Matrice de Confusion")
         cm_path = f"{artifacts_path}/confusion_matrix_tree.png"
