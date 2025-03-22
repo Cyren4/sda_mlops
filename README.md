@@ -89,6 +89,26 @@ gcloud builds submit --tag  $REGION-docker.pkg.dev/$PROJECT_ID/banking-mlops/mlo
 gcloud run deploy banking-mlops --image $REGION-docker.pkg.dev/$PROJECT_ID/banking-mlops/mlops-app:latest --region $REGION
 ```
 
+## Automatic Deployement to Cloud Run 
+
+1. Create Service Account on GCP
+-   **banking-mlops-sa** - banking-mlops-sa@appmod-demo-lvl.iam.gserviceaccount.com
+
+2. Add private key for service account (from console or cli) it will give permission to Github Action to push new services to GCP : 
+```bash
+gcloud iam service-accounts keys create
+```
+
+3. Create Secrets in Github Action :
+- Service Account key : ```GCP_SA_KEY```
+- Project ID : ```GCP_PROJECT_ID```
+- Region : ```GCP_REGION```
+- Service Name : ```GCP_SERVICE_NAME```
+
+4. Create Github Action pipeline in **.github/workflows/gcp-cicd-deployement.yml**  
+
+5. Push modification in the main branch
+ 
 
 ## File structure 
 ```
