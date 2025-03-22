@@ -20,6 +20,7 @@ dependencies:
       - setuptools
       - streamlit
       - graphviz
+      - tensorflow
 
   - brew: 
       - graphviz
