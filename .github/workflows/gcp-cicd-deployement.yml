@@ -1,9 +1,11 @@
 name: Deploy to Cloud Run
 
 env:
-  SERVICE_NAME: ${{ secrets.GCP_SERVICE_NAME }} 
-  PROJECT_ID: ${{ secrets.GCP_SA_KEY }}
-  DOCKER_IMAGE_URL: ${{ secrets.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_SA_KEY }}/${{ secrets.GCP_SERVICE_NAME }}/mlops-app
+  # SERVICE_NAME: ${{ secrets.GCP_SERVICE_NAME }} 
+  # PROJECT_ID: ${{ secrets.GCP_SA_KEY }}
+  SERVICE_NAME:  banking-mlops-app
+  PROJECT_ID: appmod-demo-lvl
+  DOCKER_IMAGE_URL: ${{ secrets.GCP_REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.SERVICE_NAME }}/mlops-app
 
 on:
   push:
