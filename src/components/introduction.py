@@ -1,6 +1,4 @@
 import streamlit as st
-import pandas as pd
-import os
 
 # === PAGE 1 : INTRODUCTION ===
 def introduction():

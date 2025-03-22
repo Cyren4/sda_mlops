@@ -1,7 +1,5 @@
 # import libraries
 import streamlit as st
-import mlflow
-import os
 
 # Import custom components
 from components.header import display_header, display_contributor 
