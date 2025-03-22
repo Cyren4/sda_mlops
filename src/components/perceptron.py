@@ -11,8 +11,8 @@ def perceptron(run_ID, perceptron):
     if rf_page == "Performance de Perceptron de Rosenblatt":
         # Charger les métriques sauvegardées
         st.subheader("Performance de Perceptron de Rosenblatt")
-        artifacts_path = f"{os.getcwd()}/src/mlruns/0/{run_ID}/artifacts" 
-        metrics_path = f"{os.getcwd()}/src/mlruns/0/{run_ID}/metrics"
+        artifacts_path = f"{os.getcwd()}/src/models/mlruns_perceptron/0/{run_ID}/artifacts" 
+        metrics_path = f"{os.getcwd()}/src/models/mlruns_perceptron/0/{run_ID}/metrics"
 
         if os.path.exists(f"{metrics_path}/accuracy"):
             try:

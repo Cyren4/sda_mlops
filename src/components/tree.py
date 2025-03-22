@@ -10,8 +10,8 @@ def arbre(run_ID, arbre):
 
     if rf_page == "Performance de Arbre de décision":
         # Charger les métriques sauvegardées
-        artifacts_path = f"{os.getcwd()}/src/mlruns/0/{run_ID}/artifacts" 
-        metrics_path = f"{os.getcwd()}/src/mlruns/0/{run_ID}/metrics"
+        artifacts_path = f"{os.getcwd()}/src/models/mlruns_tree/0/{run_ID}/artifacts" 
+        metrics_path = f"{os.getcwd()}/src/models/mlruns_tree/0/{run_ID}/metrics"
 
         # Affichage des images enregistrées dans MLflow
         st.subheader("Matrice de Confusion")
