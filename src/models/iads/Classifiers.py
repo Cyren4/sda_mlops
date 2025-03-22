@@ -207,6 +207,13 @@ class ClassifierPerceptron(Classifier):
                 self.w = np.random.uniform(-0.001, 0.001, (self.num_labels, self.input_dimension))
 
         return self
+    
+    def predict_proba(self, x):
+        from scipy.special import softmax  # Import softmax for probability computation
+        """ Return the probabilities of each class for x """
+        scores = self.score(x)  # Get raw scores for the classes
+        return softmax(scores, axis=1)  # Apply softmax to convert to probabilities
+
 
 
 
