@@ -3,7 +3,7 @@ name: Deploy to Cloud Run
 env:
   SERVICE_NAME: ${{ secrets.GCP_SERVICE_NAME }} 
   PROJECT_ID: ${{ secrets.GCP_SA_KEY }}
-  DOCKER_IMAGE_URL: ${{ secrets.REGION }}-docker.pkg.dev/${{ secrets.GCP_SA_KEY }}/${{ secrets.GCP_SERVICE_NAME }}/mlops-app
+  DOCKER_IMAGE_URL: ${{ secrets.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_SA_KEY }}/${{ secrets.GCP_SERVICE_NAME }}/mlops-app
 
 on:
   push:
@@ -33,7 +33,7 @@ jobs:
 
       - name: Configure Docker
         run: |
-          gcloud auth configure-docker ${{ secrets.REGION }}-docker.pkg.dev
+          gcloud auth configure-docker ${{ secrets.GCP_REGION }}-docker.pkg.dev
 
       - name: Build and Push Docker Image
         run: |
@@ -46,5 +46,5 @@ jobs:
           gcloud run deploy $SERVICE_NAME \
             --image ${{ env.DOCKER_IMAGE_URL }}:latest \
             --platform managed \
-            --region ${{ secrets.REGION }} \
+            --region ${{ secrets.GCP_REGION }} \
             --allow-unauthenticated
