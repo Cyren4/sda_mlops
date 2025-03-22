@@ -13,12 +13,6 @@ on:
       - cyrena-cd
 
 jobs:
-  job_id:
-    # Add "id-token" with the intended permissions.
-    permissions:
-      contents: 'read'
-      id-token: 'write'
-
   dockerize-and-deploy:
     runs-on: ubuntu-latest
 
@@ -41,8 +35,6 @@ jobs:
         uses: 'google-github-actions/setup-gcloud@v2'
         with:
           version: '>= 363.0.0'
-
-      
 
       - name: Configure Docker
         run: |
