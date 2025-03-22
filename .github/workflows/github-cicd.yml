@@ -2,11 +2,9 @@ name: Banking MLOps CICD pipeline
 
 # Define environment variables that will be used throughout the workflow.
 env:
-  # Docker Hub username, retrieved from GitHub secrets.
+  # Docker Hub username,password, repo name retrieved from GitHub secrets.
   DOCKER_USER: ${{secrets.DOCKER_USER}}
-  # Docker Hub password, retrieved from GitHub secrets.
   DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
-  # Name of the repository on Docker Hub, retrieved from GitHub secrets.
   REPO_NAME: ${{secrets.REPO_NAME}}
 
 # Event Triggers:
@@ -67,8 +65,7 @@ jobs:
   # The cd_pipeline job is responsible for Continuous Deployment.
   cd_pipeline:
       runs-on: ubuntu-latest 
-      # This job depends on the successful completion of the ci_pipeline job.
-      needs: [ci_pipeline]
+      needs: [ci_pipeline] # This job depends on the successful completion of the ci_pipeline job.
  
       steps:
       - uses: actions/checkout@v2 
