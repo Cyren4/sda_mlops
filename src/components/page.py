@@ -4,6 +4,8 @@ import mlflow
 from components.introduction import introduction
 from components.random_forest import  random_forest
 from components.lstm import lstm
+from components.perceptron import perceptron
+from components.tree import arbre
 
 
 def select_page(page, run_ID=None):
@@ -18,6 +20,12 @@ def select_page(page, run_ID=None):
         lstm()
     elif page == "🌲 Modèle Random Forest":
         random_forest(run_ID, load_model(model_URI))
+
+    elif page == "Perceptron de Rosenblatt":
+        perceptron(run_ID, load_model(model_URI))
+
+    elif page == "Arbre de Décision":
+        arbre(run_ID, load_model(model_URI))
 
 # === CHARGER LE MODÈLE RANDOM FOREST MLflow ===
 @st.cache_resource

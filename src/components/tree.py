@@ -2,68 +2,48 @@ import streamlit as st
 import pandas as pd
 import os
 
-def perceptron(run_ID, perceptron):
+def arbre(run_ID, arbre):
     """Displays the main page of the app."""
-    st.header("Perceptron de Rosenblatt - Analyse des performances")
+    st.header("Arbre de décision - Analyse des performances")
 
-    rf_page = st.sidebar.radio("Subsection", ["Performance de Perceptron de Rosenblatt", "Prédiction de Perceptron de Rosenblatt"])
+    rf_page = st.sidebar.radio("Subsection", ["Performance de Arbre de décision", "Prédiction de Arbre de décision"])
 
-    if rf_page == "Performance de Perceptron de Rosenblatt":
+    if rf_page == "Performance de Arbre de décision":
         # Charger les métriques sauvegardées
-        st.subheader("Performance de Perceptron de Rosenblatt")
         artifacts_path = f"{os.getcwd()}/src/mlruns/0/{run_ID}/artifacts" 
         metrics_path = f"{os.getcwd()}/src/mlruns/0/{run_ID}/metrics"
 
-        if os.path.exists(f"{metrics_path}/accuracy"):
-            try:
-                with open(f"{metrics_path}/accuracy_perceptrion", "r", encoding="utf-8") as file:
-                    content = file.read().strip()
-                    accuracy = float(content.split()[1])
-                    st.metric("Accuracy", f"{accuracy:.2%}")
-            except FileNotFoundError:
-                st.warning(f"Erreur : Le fichier accuracy est introuvable à l'emplacement : {metrics_path}/accuracy")
-            except IndexError:
-                st.warning(f"Erreur : Le fichier accuracy est vide ou mal formaté. Contenu : {content}")
-            except ValueError:
-                st.warning(f"Erreur : La valeur d'accuracy '{accuracy}' dans le fichier n'est pas un nombre valide.")
-            except PermissionError:
-                st.warning(f"Erreur : Vous n'avez pas la permission de lire le fichier : {metrics_path}/accuracy")
-            except Exception as e:
-                st.warning(f"Erreur inattendue : {e}")
-        else:
-            st.write("Le fichier accuracy est introuvable.")
-
         # Affichage des images enregistrées dans MLflow
         st.subheader("Matrice de Confusion")
-        cm_path = f"{artifacts_path}/confusion_matrix.png"
+        cm_path = f"{artifacts_path}/confusion_matrix_tree.png"
         if os.path.exists(cm_path):
             st.image(cm_path)
         else:
             st.warning("Matrice de confusion introuvable : " + cm_path)
 
         st.subheader("Courbe ROC")
-        roc_path = f"{artifacts_path}/roc_curve.png"
+        roc_path = f"{artifacts_path}/roc_curve_tree.png"
         if os.path.exists(roc_path):
             st.image(roc_path)
         else:
             st.warning("Courbe ROC introuvable : " + roc_path)
 
         st.subheader("Courbe Précision-Rappel")
-        pr_path = f"{artifacts_path}/precision_recall_curve.png"
+        pr_path = f"{artifacts_path}/precision_recall_curve_tree.png"
         if os.path.exists(pr_path):
             st.image(pr_path)
         else:
             st.warning("Courbe Précision-Rappel introuvable : " + pr_path)
 
-        st.subheader("Validation croisée sur perceptron")
-        cross_val_path = f"{artifacts_path}/cross_val_perceptron.png"
+        st.subheader("Validation croisée sur Arbre de décision")
+        cross_val_path = f"{artifacts_path}/cross_val_perceptron_tree.png"
         if os.path.exists(cross_val_path):
             st.image(cross_val_path)
         else:
-            st.warning("Validation croisée sur perceptron introuvable : " + cross_val_path)
+            st.warning("Validation croisée sur arbre de décision introuvable : " + cross_val_path)
 
-    elif rf_page == "Prédiction de Perceptron de Rosenblatt":
-        st.title("Prédiction du défaut de paiement - Perceptron de Rosenblatt")
+    elif rf_page == "Prédiction de Arbre de décision":
+        st.title("Prédiction du défaut de paiement - Arbre de décision")
         st.markdown("Remplissez les informations du client pour obtenir une prédiction.")
 
         credit_lines_outstanding = st.number_input("Nombre de lignes de crédit en cours", min_value=0, max_value=50, value=5)
@@ -83,7 +63,7 @@ def perceptron(run_ID, perceptron):
         })
 
         if st.button("Prédire le défaut de paiement"):
-            prediction = perceptron.predict(input_data)
+            prediction = arbre.predict(input_data)
             resultat = "Risque de défaut de paiement !" if prediction[0] == 1 else "Aucun risque détecté."
             st.subheader("Résultat de la prédiction")
             st.write(resultat)
