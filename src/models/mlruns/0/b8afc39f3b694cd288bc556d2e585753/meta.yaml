@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/hoangthuyduongvu/Desktop/sda_mlops/src/models/mlruns/0/b8afc39f3b694cd288bc556d2e585753/artifacts
+end_time: null
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: b8afc39f3b694cd288bc556d2e585753
+run_name: bouncy-tern-973
+run_uuid: b8afc39f3b694cd288bc556d2e585753
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1742646699881
+status: 1
+tags: []
+user_id: hoangthuyduongvu
