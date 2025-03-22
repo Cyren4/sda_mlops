@@ -90,7 +90,7 @@ class Classifier:
 class ClassifierPerceptron(Classifier):
     """ Perceptron de Rosenblatt
     """
-    def __init__(self, input_dimension, num_labels=10, learning_rate=0.01, init=True ):
+    def __init__(self, input_dimension, num_labels=10, learning_rate=0.01, init=True):
         """ Constructeur de Classifier
             Argument:
                 - input_dimension (int) : dimension de la description des exemples (>0)
@@ -103,6 +103,7 @@ class ClassifierPerceptron(Classifier):
         super().__init__(input_dimension)
         self.num_labels = num_labels
         self.learning_rate = learning_rate
+        self.init = init
 
         # --- Initialisation de w ---
         self.w = np.zeros((num_labels, input_dimension))  # Each label gets its own weight vector
@@ -134,11 +135,11 @@ class ClassifierPerceptron(Classifier):
         
         return self.w 
 
-    def score(self, x):
+    def score(self, X, y=None):
         """ rend le score de prédiction sur x (un vecteur de scores pour chaque classe)
             x: une description
         """
-        return np.dot(self.w, x)
+        return np.dot(self.w, X)
 
     def predict(self, x):
         """ rend la prediction sur x (un chiffre de 0 à 9)
@@ -176,9 +177,80 @@ class ClassifierPerceptron(Classifier):
             i += 1
         
         return norm_diff_values
+    
+    def fit(self, X, y):
+        """ Adaptation à la norme scikit-learn pour la compatibilité avec GridSearchCV
+        Arguments:
+            - X: ndarray des descriptions d'exemples
+            - y: ndarray des labels correspondants
+        """
+        self.train(X, y)
+
+    def get_params(self, deep=True):
+        """ Récupère les paramètres pour GridSearchCV """
+        return {
+            'input_dimension': self.w.shape[1],
+            'num_labels': self.num_labels,
+            'learning_rate': self.learning_rate,
+            'init': self.init
+        }
+
+    def set_params(self, **params):
+        """ Définit les paramètres pour GridSearchCV """
+        for param, value in params.items():
+            setattr(self, param, value)
+
+        # Reinitialize weights if input_dimension or init changes
+        if 'input_dimension' in params or 'init' in params:
+            self.w = np.zeros((self.num_labels, self.input_dimension))
+            if not self.init:
+                self.w = np.random.uniform(-0.001, 0.001, (self.num_labels, self.input_dimension))
+
+        return self
 
 
 
+
+
+
+def classe_majoritaire(Y):
+    """ Y : (array) : array de labels
+        rend la classe majoritaire ()
+    """
+    ########################## COMPLETER ICI 
+    valeurs, nb_fois = np.unique(Y, return_counts=True)
+
+    return valeurs[np.argmax(nb_fois)]
+    
+    ##########################
+        
+
+import math
+def shannon(P):
+    """ list[Number] -> float
+        Hypothèse: P est une distribution de probabilités
+        - P: distribution de probabilités
+        rend la valeur de l'entropie de Shannon correspondante
+    """
+    ########################## COMPLETER ICI 
+    s = 0.
+    for i in range(len(P)) : 
+        if P[i] != 0 and len(P) > 1 : 
+            s -= P[i] * math.log(P[i]) / math.log(len(P))
+    
+    return s
+    ##########################
+
+def entropie(Y):
+    """ Y : (array) : ensemble de labels de classe
+        rend l'entropie de l'ensemble Y
+    """
+    ########################## COMPLETER ICI 
+    _, nb_fois = np.unique(Y, return_counts=True)
+    
+    l = [i / len(Y) for i in nb_fois]
+    return shannon(l)
+    ##########################
 
 
 
@@ -646,7 +718,7 @@ class ClassifierArbreNumerique(Classifier):
     """ Classe pour représenter un classifieur par arbre de décision numérique
     """
     
-    def __init__(self, input_dimension, epsilon, LNoms=[]):
+    def __init__(self, input_dimension=1, epsilon=0.01, LNoms=[]):
         """ Constructeur
             Argument:
                 - intput_dimension (int) : dimension de la description des exemples
@@ -654,7 +726,7 @@ class ClassifierArbreNumerique(Classifier):
                 - LNoms : Liste des noms de dimensions (si connues)
             Hypothèse : input_dimension > 0
         """
-        self.dimension = input_dimension
+        self.input_dimension = input_dimension
         self.epsilon = epsilon
         self.LNoms = LNoms
         # l'arbre est manipulé par sa racine qui sera un Noeud
@@ -674,13 +746,13 @@ class ClassifierArbreNumerique(Classifier):
         """        
         self.racine = construit_AD_num(desc_set,label_set,self.epsilon,self.LNoms)
     
-    def score(self,x):
+    def score(self, X, y=None):
         """ rend le score de prédiction sur x (valeur réelle)
             x: une description
         """
         # cette méthode ne fait rien dans notre implémentation :
         pass
-    
+
     def predict(self, x):
         """ x (array): une description d'exemple
             rend la prediction sur x             
@@ -710,5 +782,27 @@ class ClassifierArbreNumerique(Classifier):
             Cette fonction modifie GTree par effet de bord
         """
         self.racine.to_graph(GTree)
+
+    def fit(self, X, y):
+        """ Adaptation à la norme scikit-learn pour la compatibilité avec GridSearchCV
+        Arguments:
+            - X: ndarray des descriptions d'exemples
+            - y: ndarray des labels correspondants
+        """
+        self.train(X, y)
+
+    def get_params(self, deep=True):
+        return {
+            'input_dimension': self.input_dimension,
+            'epsilon': self.epsilon,
+            'LNoms': self.LNoms
+        }
+
+    def set_params(self, **params):
+        for param, value in params.items():
+            setattr(self, param, value)
+        return self
+
+
 # ---------------------------
 
