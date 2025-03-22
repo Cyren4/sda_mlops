@@ -18,10 +18,10 @@ SHELL ["conda", "run", "-n", "banking-mlops", "/bin/bash", "-c"]
 COPY . /app/
 
 # Expose the port Streamlit uses
-EXPOSE 8501
+EXPOSE 8080
 
 # Run the Streamlit app
 # CMD ["streamlit", "run", "src/app.py"]
 
 # Run the Streamlit app using conda run to ensure the environment is active
-CMD ["conda", "run", "-n", "banking-mlops", "streamlit", "run", "src/app.py"]
+CMD ["conda", "run", "-n", "banking-mlops", "streamlit", "run", "src/app.py", "--server.port=8080"]
