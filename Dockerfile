@@ -15,9 +15,7 @@ SHELL ["conda", "run", "-n", "banking-mlops", "/bin/bash", "-c"]
 # RUN conda activate banking-mlops 
 
 # Copy the application code
-COPY src/ /app/src/
-COPY data/ /app/data/
-COPY config/ /app/config/
+COPY . /app/
 
 # Expose the port Streamlit uses
 EXPOSE 8501

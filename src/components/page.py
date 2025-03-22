@@ -1,6 +1,5 @@
 import streamlit as st
 import pandas as pd
-import mlflow.pyfunc
 import os
 
 # === PAGE 1 : INTRODUCTION ===
@@ -49,20 +48,28 @@ def random_forest(run_ID, rf_model):
     if rf_page == "📊 Performance Random Forest":
         # Charger les métriques sauvegardées
         st.subheader("📊 Performance du Modèle Random Forest")
-        metrics_path = f"{run_ID}/metrics"
-        artifacts_path = os.getcwd() + "/images" # remove "/src si on run streamlit depuis src folder"
+        artifacts_path = f"{os.getcwd()}/src/mlruns/0/{run_ID}/artifacts" 
+        metrics_path = f"{os.getcwd()}/src/mlruns/0/{run_ID}/metrics"
 
         if os.path.exists(f"{metrics_path}/accuracy"):
             
             # Lire et afficher l'accuracy
             try:
-                with open(f"{metrics_path}/accuracy", "r") as file:
+                with open(f"{metrics_path}/accuracy", "r", encoding="utf-8") as file:
                     content = file.read().strip()
                     # Récupérer la deuxième valeur 
                     accuracy = float(content.split()[1])  # Sépare par espace et prend la deuxième valeur
                     st.metric("🎯 Accuracy", f"{accuracy:.2%}")
-            except Exception as e:
-                st.warning(f"⚠️ Erreur lors du chargement de l'accuracy : {e}")
+            except FileNotFoundError:
+                st.warning(f"⚠️ Erreur : Le fichier accuracy est introuvable à l'emplacement : {metrics_path}/accuracy")
+            except IndexError:
+                st.warning(f"⚠️ Erreur : Le fichier accuracy est vide ou mal formaté. Contenu : {content}")
+            except ValueError:
+                st.warning(f"⚠️ Erreur : La valeur d'accuracy '{accuracy}' dans le fichier n'est pas un nombre valide.")
+            except PermissionError:
+                st.warning(f"⚠️ Erreur : Vous n'avez pas la permission de lire le fichier : {metrics_path}/accuracy")
+            except Exception as e : # pylint: disable=broad-except
+                st.warning(f"⚠️ Erreur inattendue : {e}")
 
         else:
             st.write("❌ Le fichier accuracy est introuvable.")
@@ -73,28 +80,28 @@ def random_forest(run_ID, rf_model):
         if os.path.exists(cm_path):
             st.image(cm_path, caption="Matrice de Confusion")
         else:
-            st.warning("⚠️ Matrice de confusion introuvable.")
+            st.warning("⚠️ Matrice de confusion introuvable : " + cm_path)
 
         st.subheader("📈 Courbe ROC")
         roc_path = f"{artifacts_path}/roc_curve.png"
         if os.path.exists(roc_path):
             st.image(roc_path, caption="Courbe ROC")
         else:
-            st.warning("⚠️ Courbe ROC introuvable.")
+            st.warning("⚠️ Courbe ROC introuvable : " + cm_path)
 
         st.subheader("📉 Courbe Précision-Rappel")
         pr_path = f"{artifacts_path}/precision_recall_curve.png"
         if os.path.exists(pr_path):
             st.image(pr_path, caption="Courbe Précision-Rappel")
         else:
-            st.warning("⚠️ Courbe Précision-Rappel introuvable.")
+            st.warning("⚠️ Courbe Précision-Rappel introuvable : " + cm_path)
 
         st.subheader("💡 Importance des Features")
         fi_path = f"{artifacts_path}/feature_importances.png"
         if os.path.exists(fi_path):
             st.image(fi_path, caption="Importance des Features")
         else:
-            st.warning("⚠️ Importance des Features introuvable.")
+            st.warning("⚠️ Importance des Features introuvable : " + cm_path)
 
     elif rf_page == "🤖 Prédiction Random Forest":
         st.title("🤖 Prédiction du défaut de paiement - Random Forest")

@@ -1,0 +1,91 @@
+name: Banking MLOps CICD pipeline
+
+# Define environment variables that will be used throughout the workflow.
+env:
+  # Docker Hub username, retrieved from GitHub secrets.
+  DOCKER_USER: ${{secrets.DOCKER_USER}}
+  # Docker Hub password, retrieved from GitHub secrets.
+  DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
+  # Name of the repository on Docker Hub, retrieved from GitHub secrets.
+  REPO_NAME: ${{secrets.REPO_NAME}}
+
+# Event Triggers:
+# The pipeline is triggered whenever there is a push to the main branch.
+# It is also triggered whenever there is a pull request to the main branch.
+on:
+  push:
+    branches:
+    - main
+  pull_request:
+    branches:
+    - main
+
+# this pipeline consists of a two jobs named ci_pipeline and cd_pipeline
+
+jobs:
+  # The ci_pipeline job is responsible for Continuous Integration.
+  ci_pipeline: 
+       # Specifies the operating system for the job.
+       runs-on: ubuntu-latest     
+       
+       steps:
+        - uses: actions/checkout@v1 
+          # Fetches the entire commit history.
+          with:
+            fetch-depth: 0
+        
+        # Sets up Python 3.9 environment.
+        - name: Set up Python 3.9
+          uses: actions/setup-python@v1
+          with:
+            python-version: 3.9
+
+        # Installs project dependencies from requirements.txt.
+        - name: Install dependencies
+          run: |
+            python -m pip install --upgrade pip
+            if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+        # Formats the specified Python files using the Black code formatter.
+        - name: Format
+          run: |
+            BLACK_FILES="src/app.py src/components/header.py src/components/page.py"
+            black $BLACK_FILES 
+
+        # Performs linting on the specified Python files using Pylint.
+        - name: Lint
+          run: |
+            LINT_FILES="src/app.py src/components/header.py src/components/page.py"
+            pylint --disable=R,C $LINT_FILES 
+
+        # # Example of a test step (commented out).
+        # - name: Test
+        #   run: |
+        #     python -m pytest -vv test.py
+
+
+  # The cd_pipeline job is responsible for Continuous Deployment.
+  cd_pipeline:
+      runs-on: ubuntu-latest 
+      # This job depends on the successful completion of the ci_pipeline job.
+      needs: [ci_pipeline]
+ 
+      steps:
+      - uses: actions/checkout@v2 
+      # Logs into Docker Hub using the provided credentials.
+      - name: docker login
+        run: | 
+          docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
+  
+      # Gets the current date and time and sets it as an output.
+      - name: Get current date 
+        id: date
+        run: echo "::set-output name=date::$(date +'%Y-%m-%d--%M-%S')"
+
+      # Builds the Docker image and tags it with the current date and time.
+      - name: Build the Docker image 
+        run: docker build . --file Dockerfile --tag $DOCKER_USER/$REPO_NAME:${{ steps.date.outputs.date }}
+
+      # Pushes the built Docker image to Docker Hub.
+      - name: Docker Push
+        run: docker push $DOCKER_USER/$REPO_NAME:${{ steps.date.outputs.date }}
