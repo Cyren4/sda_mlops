@@ -1,0 +1,89 @@
+import streamlit as st
+import pandas as pd
+import os
+
+def perceptron(run_ID, perceptron):
+    """Displays the main page of the app."""
+    st.header("Perceptron de Rosenblatt - Analyse des performances")
+
+    rf_page = st.sidebar.radio("Subsection", ["Performance de Perceptron de Rosenblatt", "Prédiction de Perceptron de Rosenblatt"])
+
+    if rf_page == "Performance de Perceptron de Rosenblatt":
+        # Charger les métriques sauvegardées
+        st.subheader("Performance de Perceptron de Rosenblatt")
+        artifacts_path = f"{os.getcwd()}/src/models/mlruns_perceptron/0/{run_ID}/artifacts" 
+        metrics_path = f"{os.getcwd()}/src/models/mlruns_perceptron/0/{run_ID}/metrics"
+
+        if os.path.exists(f"{metrics_path}/accuracy"):
+            try:
+                with open(f"{metrics_path}/accuracy_perceptrion", "r", encoding="utf-8") as file:
+                    content = file.read().strip()
+                    accuracy = float(content.split()[1])
+                    st.metric("Accuracy", f"{accuracy:.2%}")
+            except FileNotFoundError:
+                st.warning(f"Erreur : Le fichier accuracy est introuvable à l'emplacement : {metrics_path}/accuracy")
+            except IndexError:
+                st.warning(f"Erreur : Le fichier accuracy est vide ou mal formaté. Contenu : {content}")
+            except ValueError:
+                st.warning(f"Erreur : La valeur d'accuracy '{accuracy}' dans le fichier n'est pas un nombre valide.")
+            except PermissionError:
+                st.warning(f"Erreur : Vous n'avez pas la permission de lire le fichier : {metrics_path}/accuracy")
+            except Exception as e:
+                st.warning(f"Erreur inattendue : {e}")
+        else:
+            st.write("Le fichier accuracy est introuvable.")
+
+        # Affichage des images enregistrées dans MLflow
+        st.subheader("Matrice de Confusion")
+        cm_path = f"{artifacts_path}/confusion_matrix.png"
+        if os.path.exists(cm_path):
+            st.image(cm_path)
+        else:
+            st.warning("Matrice de confusion introuvable : " + cm_path)
+
+        st.subheader("Courbe ROC")
+        roc_path = f"{artifacts_path}/roc_curve.png"
+        if os.path.exists(roc_path):
+            st.image(roc_path)
+        else:
+            st.warning("Courbe ROC introuvable : " + roc_path)
+
+        st.subheader("Courbe Précision-Rappel")
+        pr_path = f"{artifacts_path}/precision_recall_curve.png"
+        if os.path.exists(pr_path):
+            st.image(pr_path)
+        else:
+            st.warning("Courbe Précision-Rappel introuvable : " + pr_path)
+
+        st.subheader("Validation croisée sur perceptron")
+        cross_val_path = f"{artifacts_path}/cross_val_perceptron.png"
+        if os.path.exists(cross_val_path):
+            st.image(cross_val_path)
+        else:
+            st.warning("Validation croisée sur perceptron introuvable : " + cross_val_path)
+
+    elif rf_page == "Prédiction de Perceptron de Rosenblatt":
+        st.title("Prédiction du défaut de paiement - Perceptron de Rosenblatt")
+        st.markdown("Remplissez les informations du client pour obtenir une prédiction.")
+
+        credit_lines_outstanding = st.number_input("Nombre de lignes de crédit en cours", min_value=0, max_value=50, value=5)
+        loan_amt_outstanding = st.number_input("Montant du prêt en cours ($)", min_value=0, max_value=1000000, value=20000)
+        total_debt_outstanding = st.number_input("Dette totale en cours ($)", min_value=0, max_value=5000000, value=50000)
+        income = st.number_input("Revenu annuel ($)", min_value=1000, max_value=1000000, value=50000)
+        years_employed = st.number_input("Années d'emploi", min_value=0, max_value=50, value=5)
+        fico_score = st.slider("Score FICO", min_value=300, max_value=850, value=600)
+
+        input_data = pd.DataFrame({
+            "credit_lines_outstanding": [credit_lines_outstanding],
+            "loan_amt_outstanding": [loan_amt_outstanding],
+            "total_debt_outstanding": [total_debt_outstanding],
+            "income": [income],
+            "years_employed": [years_employed],
+            "fico_score": [fico_score]
+        })
+
+        if st.button("Prédire le défaut de paiement"):
+            prediction = perceptron.predict(input_data)
+            resultat = "Risque de défaut de paiement !" if prediction[0] == 1 else "Aucun risque détecté."
+            st.subheader("Résultat de la prédiction")
+            st.write(resultat)

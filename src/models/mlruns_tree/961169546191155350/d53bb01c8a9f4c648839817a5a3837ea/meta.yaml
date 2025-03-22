@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/hoangthuyduongvu/Desktop/sda_mlops/src/models/mlruns_tree/961169546191155350/d53bb01c8a9f4c648839817a5a3837ea/artifacts
+end_time: null
+entry_point_name: ''
+experiment_id: '961169546191155350'
+lifecycle_stage: active
+run_id: d53bb01c8a9f4c648839817a5a3837ea
+run_name: monumental-croc-389
+run_uuid: d53bb01c8a9f4c648839817a5a3837ea
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1742672931666
+status: 1
+tags: []
+user_id: hoangthuyduongvu

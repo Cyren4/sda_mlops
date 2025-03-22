@@ -67,6 +67,8 @@ def random_forest(run_ID, rf_model):
         else:
             st.warning("⚠️ Importance des Features introuvable : " + cm_path)
 
+
+
     elif rf_page == "🤖 Prédiction Random Forest":
         st.title("🤖 Prédiction du défaut de paiement - Random Forest")
 

@@ -14,7 +14,7 @@ def main():
     display_header()
     # === BARRE DE NAVIGATION ===
     st.sidebar.title("Navigation")
-    main_page = st.sidebar.radio("Sélectionner une section", ["🏦 Introduction", "📈 Modèle LSTM", "🌲 Modèle Random Forest"])
+    main_page = st.sidebar.radio("Sélectionner une section", ["🏦 Introduction", "📈 Modèle LSTM", "🌲 Modèle Random Forest", "Perceptron de Rosenblatt", "Arbre de Décision"])
     select_page(main_page, run_ID)
     display_contributor()
     
