@@ -471,7 +471,6 @@ def partitionne(m_desc,m_class,n,s):
             (m_desc[m_desc[:,n]>s], m_class[m_desc[:,n]>s]))
 
 
-import graphviz as gv
 
 class NoeudNumerique:
     """ Classe pour représenter des noeuds numériques d'un arbre de décision
