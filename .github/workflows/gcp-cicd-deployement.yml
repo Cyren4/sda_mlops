@@ -13,14 +13,14 @@ on:
       - cyrena-cd
 
 jobs:
-  dockerize-and-deploy:
-    runs-on: ubuntu-latest
-
   job_id:
     # Add "id-token" with the intended permissions.
     permissions:
       contents: 'read'
       id-token: 'write'
+
+  dockerize-and-deploy:
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
