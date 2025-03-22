@@ -83,102 +83,6 @@ class Classifier:
 
 
 # ---------------------------
-# ClassifieurKNN
-# ---------------------------
-# Version adjustée de ClassifierKNN pour 10 labels rangées de 0 -> 9
-# ---------------------------
-class ClassifierKNN(Classifier):
-    """ Classe pour représenter un classifieur par K plus proches voisins.
-        Cette classe hérite de la classe Classifier
-    """
-
-    def __init__(self, input_dimension, k):
-        """ Constructeur de ClassifierKNN
-            Argument:
-                - input_dimension (int) : dimension d'entrée des exemples
-                - k (int) : nombre de voisins à considérer
-            Hypothèse : input_dimension > 0
-        """
-        super().__init__(input_dimension)
-        self.k = k
-
-    def score(self, x):
-        """ Rend la proportion des labels parmi les k ppv de x (valeur réelle)
-            x: une description : un ndarray
-        """
-        distances = np.sqrt(np.sum((self.desc_set - x) ** 2, axis=1))
-        nearest_indices = np.argsort(distances)[:self.k]
-        nearest_labels = self.label_set[nearest_indices]
-        label_counts = np.bincount(nearest_labels, minlength=10)
-        return np.argmax(label_counts)
-
-    def predict(self, x):
-        """ Rend la prédiction sur x (label de 0 à 9)
-            x: une description : un ndarray
-        """
-        return self.score(x)
-
-    def train(self, desc_set, label_set):
-        """ Permet d'entraîner le modèle sur l'ensemble donné
-            desc_set: ndarray avec des descriptions
-            label_set: ndarray avec les labels correspondants
-            Hypothèse: desc_set et label_set ont le même nombre de lignes
-        """
-        self.desc_set = desc_set
-        self.label_set = label_set
-
-
-
-
-# ---------------------------
-# ClassifierLineaireRandom
-# ---------------------------
-
-class ClassifierLineaireRandom(Classifier):
-    """ Classe pour représenter un classifieur linéaire aléatoire
-        Cette classe hérite de la classe Classifier
-    """
-    
-    def __init__(self, input_dimension):
-        """ Constructeur de Classifier
-            Argument:
-                - intput_dimension (int) : dimension de la description des exemples
-            Hypothèse : input_dimension > 0
-        """
-        super().__init__(input_dimension)
-        self.w = np.random.uniform(-1, 1, input_dimension)
-        
-        #raise NotImplementedError("Please Implement this method")
-        
-    def train(self, desc_set, label_set):
-        """ Permet d'entrainer le modele sur l'ensemble donné
-            desc_set: ndarray avec des descriptions
-            label_set: ndarray avec les labels correspondants
-            Hypothèse: desc_set et label_set ont le même nombre de lignes
-        """        
-        self.desc_set = desc_set
-        self.label_set = label_set
-        print("Pas d'apprentissage pour ce classifieur !")
-        #raise NotImplementedError("Please Implement this method")
-    
-    def score(self,x):
-        """ rend le score de prédiction sur x (valeur réelle)
-            x: une description
-        """
-        return np.dot(x, self.w)
-        #raise NotImplementedError("Please Implement this method")
-    
-    def predict(self, x):
-        """ rend la prediction sur x (soit -1 ou soit +1)
-            x: une description
-        """
-        return 1 if self.score(x) > 0 else -1
-        #raise NotImplementedError("Please Implement this method")
-    
-
-
-
-# ---------------------------
 # ClassifierPerceptron
 # ---------------------------
 # Version adjustée pour 10 labels allant de 0->9
@@ -186,7 +90,7 @@ class ClassifierLineaireRandom(Classifier):
 class ClassifierPerceptron(Classifier):
     """ Perceptron de Rosenblatt
     """
-    def __init__(self, input_dimension, num_labels=10, learning_rate=0.01, init=True ):
+    def __init__(self, input_dimension, num_labels=10, learning_rate=0.01, init=True):
         """ Constructeur de Classifier
             Argument:
                 - input_dimension (int) : dimension de la description des exemples (>0)
@@ -199,6 +103,7 @@ class ClassifierPerceptron(Classifier):
         super().__init__(input_dimension)
         self.num_labels = num_labels
         self.learning_rate = learning_rate
+        self.init = init
 
         # --- Initialisation de w ---
         self.w = np.zeros((num_labels, input_dimension))  # Each label gets its own weight vector
@@ -230,11 +135,11 @@ class ClassifierPerceptron(Classifier):
         
         return self.w 
 
-    def score(self, x):
+    def score(self, X, y=None):
         """ rend le score de prédiction sur x (un vecteur de scores pour chaque classe)
             x: une description
         """
-        return np.dot(self.w, x)
+        return np.dot(self.w, X)
 
     def predict(self, x):
         """ rend la prediction sur x (un chiffre de 0 à 9)
@@ -272,445 +177,39 @@ class ClassifierPerceptron(Classifier):
             i += 1
         
         return norm_diff_values
-
-
-
-
-
-# ---------------------------
-# ClassifierPerceptronBiais
-# ---------------------------
-
-# Remarque : quand vous transférerez cette classe dans le fichier classifieur.py 
-# de votre librairie, il faudra enlever "classif." en préfixe de la classe ClassifierPerceptron:
-
-class ClassifierPerceptronBiais(ClassifierPerceptron):
-    """ Perceptron de Rosenblatt avec biais
-        Variante du perceptron de base
-    """
-    def __init__(self, input_dimension, learning_rate=0.01, init=True):
-        """ Constructeur de Classifier
-            Argument:
-                - input_dimension (int) : dimension de la description des exemples (>0)
-                - learning_rate (par défaut 0.01): epsilon
-                - init est le mode d'initialisation de w: 
-                    - si True (par défaut): initialisation à 0 de w,
-                    - si False : initialisation par tirage aléatoire de valeurs petites
-        """
-        # Appel du constructeur de la classe mère
-        super().__init__(input_dimension, learning_rate=learning_rate, init=init)
-        # Affichage pour information (décommentez pour la mise au point)
-        # print("Init perceptron biais: w= ",self.w," learning rate= ",learning_rate)
-        
-    def train_step(self, desc_set, label_set):
-        """ Réalise une unique itération sur tous les exemples du dataset
-            donné en prenant les exemples aléatoirement.
-            Arguments:
-                - desc_set: ndarray avec des descriptions
-                - label_set: ndarray avec les labels correspondants
-        """  
-        ##################
-        ### A COMPLETER !
-        ##################
-        # Ne pas oublier d'ajouter les poids à allw avant de terminer la méthode
-        self.desc_set = desc_set
-        self.label_set = label_set
-        data = np.array(
-            [(i,desc_set[i],label_set[i]) \
-                for i in range(len(desc_set))],dtype=object
-            )
-        
-        np.random.shuffle(data)
-        for _, x_i, y_i in data : 
-            f_x_i = self.score(x_i)
-
-            if f_x_i * y_i < 1 : 
-                self.w += self.learning_rate * (y_i - f_x_i) * x_i
-            
-            self.allw.append(self.w.copy())
-        return self.w
-        # raise NotImplementedError("Vous devez implémenter cette méthode !")    
-# ------------------------ 
-
-
-
-
-
-
-# Donner la définition de la classe ClassifierMultiOAA
-
-# Vous pouvez avoir besoin d'utiliser la fonction deepcopy de la librairie standard copy:
-import copy 
-
-
-# ------------------------ A COMPLETER :
-
-class ClassifierMultiOAA(Classifier):
-    """ Classifieur multi-classes
-    """
-    def __init__(self, cl_bin):
-        """ Constructeur de Classifier
-            Argument:
-                - input_dimension (int) : dimension de la description des exemples (espace originel)
-                - cl_bin: classifieur binaire positif/négatif
-            Hypothèse : input_dimension > 0
-        """
-
-        self.cl_bin = cl_bin 
-        self.classifieurs = []
-
-        # raise NotImplementedError("Vous devez implémenter cette fonction !")
-        
-        
-    def train(self, desc_set, label_set):
-        """ Permet d'entrainer le modele sur l'ensemble donné
-            réalise une itération sur l'ensemble des données prises aléatoirement
-            desc_set: ndarray avec des descriptions
-            label_set: ndarray avec les labels correspondants
-            Hypothèse: desc_set et label_set ont le même nombre de lignes
-        """      
-        self.classifiers = []
-        for c in np.unique(label_set):
-            cl = copy.deepcopy(self.cl_bin)
-            labels = np.where(label_set == c, 1, -1)
-            cl.train(desc_set, labels)
-            self.classifiers.append(cl)
-
-        # raise NotImplementedError("Vous devez implémenter cette fonction !")
-        
     
-    def score(self,x):
-        """ rend le score de prédiction sur x (valeur réelle)
-            x: une description
+    def fit(self, X, y):
+        """ Adaptation à la norme scikit-learn pour la compatibilité avec GridSearchCV
+        Arguments:
+            - X: ndarray des descriptions d'exemples
+            - y: ndarray des labels correspondants
         """
-        scores = [clf.score(x) for clf in self.classifiers]
-        return scores
+        self.train(X, y)
 
-        # raise NotImplementedError("Vous devez implémenter cette fonction !")
-        
-    def predict(self, x):
-        """ rend la prediction sur x (soit -1 ou soit +1)
-            x: une description
-        """
-        scores = self.score(x)
-        return np.argmax(scores)
-        
-        # raise NotImplementedError("Vous devez implémenter cette fonction !")
+    def get_params(self, deep=True):
+        """ Récupère les paramètres pour GridSearchCV """
+        return {
+            'input_dimension': self.w.shape[1],
+            'num_labels': self.num_labels,
+            'learning_rate': self.learning_rate,
+            'init': self.init
+        }
 
+    def set_params(self, **params):
+        """ Définit les paramètres pour GridSearchCV """
+        for param, value in params.items():
+            setattr(self, param, value)
 
+        # Reinitialize weights if input_dimension or init changes
+        if 'input_dimension' in params or 'init' in params:
+            self.w = np.zeros((self.num_labels, self.input_dimension))
+            if not self.init:
+                self.w = np.random.uniform(-0.001, 0.001, (self.num_labels, self.input_dimension))
 
-
-
-
-
-
-
-# CLasse (abstraite) pour représenter des noyaux
-class Kernel():
-    """ Classe pour représenter des fonctions noyau
-    """
-    def __init__(self, dim_in, dim_out):
-        """ Constructeur de Kernel
-            Argument:
-                - dim_in : dimension de l'espace de départ (entrée du noyau)
-                - dim_out: dimension de l'espace de d'arrivée (sortie du noyau)
-        """
-        self.input_dim = dim_in
-        self.output_dim = dim_out
-        
-    def get_input_dim(self):
-        """ rend la dimension de l'espace de départ
-        """
-        return self.input_dim
-
-    def get_output_dim(self):
-        """ rend la dimension de l'espace d'arrivée
-        """
-        return self.output_dim
-    
-    def transform(self, V):
-        """ ndarray -> ndarray
-            fonction pour transformer V dans le nouvel espace de représentation
-        """        
-        raise NotImplementedError("Please Implement this method")
+        return self
 
 
 
-class KernelBias(Kernel):
-    """ Classe pour un noyau simple 2D -> 3D
-    """
-    def __init__(self):
-        """ Constructeur de KernelBias
-            pas d'argument, les dimensions sont figées
-        """
-        # Appel du constructeur de la classe mère
-        super().__init__(2,3)
-        
-    def transform(self, V):
-        """ ndarray de dim 2 -> ndarray de dim 3            
-            rajoute une 3e dimension au vecteur donné
-        """
-        
-        if (V.ndim == 1): # on regarde si c'est un vecteur ou une matrice
-            W = np.array([V]) # conversion en matrice
-            V_proj = np.append(W,np.ones((len(W),1)),axis=1)
-            V_proj = V_proj[0]  # on rend quelque chose de la même dimension
-        else:
-            V_proj = np.append(V,np.ones((len(V),1)),axis=1)
-            
-        return V_proj
-        
-
-
-
-# ------------------------ A COMPLETER :
-
-class KernelPoly(Kernel):
-    def __init__(self):
-        """ Constructeur de KernelPoly
-            pas d'argument, les dimensions sont figées
-        """
-        # Appel du constructeur de la classe mère
-        super().__init__(2,6)
-        
-    def transform(self,V):
-        """ ndarray de dim 2 -> ndarray de dim 6            
-            transforme un vecteur 2D en un vecteur 6D de la forme (1, x1, x2, x1*x1, x2*x2, x1*x2)
-        """
-        ## TODO
-        if (V.ndim == 1) : 
-          W = np.array([V]) # conversion en matrice
-          V_proj = np.append(np.ones((len(W),1)),W,axis=1)
-          x1, x2 = V[0], V[1]
-
-          
-          V_proj = V_proj[0]  # on rend quelque chose de la même dimension
-          V_proj = np.append(V_proj, x1*x1)
-          V_proj = np.append(V_proj, x2*x2)
-          V_proj = np.append(V_proj, x1*x2)
-        
-        else : 
-          V_proj = np.append(np.ones((len(V),1)),V,axis=1)
-          x1, x2 = V[:,0], V[:,1]
-          
-          one = np.ones((len(V),1))
-          x11 = x1 * x1
-          x22 = x2 * x2
-          x12 = x1 * x2
-
-          V_proj = np.append(V_proj, [one[i] * x11[i] for i in range(len(one))],axis=1)
-          V_proj = np.append(V_proj, [one[i] * x22[i] for i in range(len(one))],axis=1)
-          V_proj = np.append(V_proj, [one[i] * x12[i] for i in range(len(one))],axis=1)
-
-        return V_proj
-        # raise NotImplementedError("Please Implement this method")
-
-
-
-
-
-# ------------------------ A COMPLETER :
-class ClassifierPerceptronKernel(ClassifierPerceptron):
-    """ Perceptron de Rosenblatt kernelisé
-    """
-    def __init__(self, input_dimension, learning_rate, noyau, init=0):
-        """ Constructeur de Classifier
-            Argument:
-                - input_dimension (int) : dimension de la description des exemples (espace originel)
-                - learning_rate : epsilon
-                - noyau : Kernel à utiliser
-                - init est le mode d'initialisation de w: 
-                    - si 0 (par défaut): initialisation à 0 de w,
-                    - si 1 : initialisation par tirage aléatoire de valeurs petites
-        """
-        super().__init__(input_dimension, learning_rate, bool(init))
-        self.kernel = noyau
-
-        # --- Initialisation de w ---
-        self.w = np.zeros(self.kernel.get_output_dim())
-        if not init :
-            for i in range(self.kernel.get_output_dim()):
-                self.w[i] = ((2*np.random.random()-1) * 0.001)
-
-        # self.allw =[self.w.copy()] # stockage des premiers poids
-        
-        # raise NotImplementedError("Please Implement this method")
-        
-    def train_step(self, desc_set, label_set):
-        """ Réalise une unique itération sur tous les exemples du dataset
-            donné en prenant les exemples aléatoirement.
-            Arguments: (dans l'espace originel)
-                - desc_set: ndarray avec des descriptions
-                - label_set: ndarray avec les labels correspondants
-        """        
-        # Mélanger les indices des exemples
-        data = np.array([(i,desc_set[i],label_set[i]) for i in range(len(desc_set))],dtype=object)
-        np.random.shuffle(data)
-
-        for _,x_i,y_i in data :
-            predict = self.predict(x_i)
-
-            if y_i != predict : 
-                self.w += self.learning_rate * y_i * self.kernel.transform(x_i)
-
-            #self.allw.append(self.w.copy())
-        
-        return self.w 
-
-        #raise NotImplementedError("Please Implement this method")
-     
-    def score(self,x):
-        """ rend le score de prédiction sur x 
-            x: une description (dans l'espace originel)
-        """
-        # Projeter la description dans l'espace de dimension supérieure
-        x_transformed = self.kernel.transform(x)
-        # Calculer le score de prédiction
-        score = np.dot(self.w, x_transformed)
-        # Appliquer la fonction d'activation
-        return score
-        #raise NotImplementedError("Please Implement this method")
-    
-
-
-
-
-
-# code de la classe pour le classifieur ADALINE
-
-
-# ATTENTION: contrairement à la classe ClassifierPerceptron, on n'utilise pas de méthode train_step()
-# dans ce classifier, tout se fera dans train()
-
-
-#TODO: Classe à Compléter
-
-class ClassifierADALINE(Classifier):
-    """ Perceptron de ADALINE
-    """
-    def __init__(self, input_dimension, learning_rate, history=False, niter_max=1000):
-        """ Constructeur de Classifier
-            Argument:
-                - input_dimension (int) : dimension de la description des exemples
-                - learning_rate : epsilon
-                - history : stockage des poids w en cours d'apprentissage
-                - niter_max : borne sur les iterations
-            Hypothèse : input_dimension > 0
-        """
-        super().__init__(input_dimension)
-        self.learning_rate = learning_rate
-        self.history = history
-        self.niter_max = niter_max
-
-        # Initialisation de w aléatoire
-        self.w = np.random.randn(input_dimension) * learning_rate
-        
-        self.allw = [] # stockage des premiers poids
-        # raise NotImplementedError("Please Implement this method")
-        
-    def train(self, desc_set, label_set):
-        """ Permet d'entrainer le modele sur l'ensemble donné
-            réalise une itération sur l'ensemble des données prises aléatoirement
-            desc_set: ndarray avec des descriptions
-            label_set: ndarray avec les labels correspondants
-            Hypothèse: desc_set et label_set ont le même nombre de lignes
-        """        
-        # BOUCLE
-        self.desc_set = desc_set
-        self.label_set = label_set
-        
-        if self.history : 
-            self.allw.append(self.w.copy())
-        
-        lastw = self.w + 1
-
-        for i in range(self.niter_max) : 
-            index = int(np.random.rand() * len(desc_set))
-            x,y = desc_set[index], label_set[index]
-
-            yhat = self.score(x)
-
-            self.w -= self.learning_rate * x * (self.score(x) - y)
-
-            if self.history : 
-                self.allw.append(self.w.copy())
-
-            if i%len(desc_set) == 0 : 
-                if np.max(np.abs(lastw - self.w)) < 1e-3 : 
-                    print("cvg in"+str(i)+"iterations")
-                    return
-                lastw = self.w
-
-        # raise NotImplementedError("Please Implement this method")
-    
-    def score(self,x):
-        """ rend le score de prédiction sur x (valeur réelle)
-            x: une description
-        """
-        return np.dot(self.w, x)
-
-        # raise NotImplementedError("Please Implement this method")
-    
-    def predict(self, x):
-        """ rend la prediction sur x (soit -1 ou soit +1)
-            x: une description
-        """
-        return np.sign(self.score(x))
-
-        # raise NotImplementedError("Please Implement this method")
-
-
-
-
-# code de la classe ADALINE Analytique
-
-class ClassifierADALINE2(Classifier):
-# ...... COMPLETER
-    """ Perceptron de ADALINE
-    """
-    def __init__(self, input_dimension):
-        """ Constructeur de Classifier
-            Argument:
-                - input_dimension (int) : dimension de la description des exemples
-                - learning_rate : epsilon
-                - history : stockage des poids w en cours d'apprentissage
-                - niter_max : borne sur les iterations
-            Hypothèse : input_dimension > 0
-        """
-        super().__init__(input_dimension)
-
-        # Initialisation de w aléatoire
-        # self.w = np.random.randn(input_dimension) * learning_rate
-        
-        # self.allw = [] # stockage des premiers poids
-        # raise NotImplementedError("Please Implement this method")
-        
-    def train(self, desc_set, label_set):
-        """ Permet d'entrainer le modele sur l'ensemble donné
-            réalise une itération sur l'ensemble des données prises aléatoirement
-            desc_set: ndarray avec des descriptions
-            label_set: ndarray avec les labels correspondants
-            Hypothèse: desc_set et label_set ont le même nombre de lignes
-        """        
-        self.w = np.linalg.solve(desc_set.T @ desc_set, desc_set.T @ label_set)
-
-        # raise NotImplementedError("Please Implement this method")
-    
-    def score(self,x):
-        """ rend le score de prédiction sur x (valeur réelle)
-            x: une description
-        """
-        return np.dot(self.w, x)
-
-        # raise NotImplementedError("Please Implement this method")
-    
-    def predict(self, x):
-        """ rend la prediction sur x (soit -1 ou soit +1)
-            x: une description
-        """
-        return np.sign(self.score(x))
-
-        # raise NotImplementedError("Please Implement this method")
 
 
 
@@ -752,6 +251,7 @@ def entropie(Y):
     l = [i / len(Y) for i in nb_fois]
     return shannon(l)
     ##########################
+
 
 
 # La librairie suivante est nécessaire pour l'affichage graphique de l'arbre:
@@ -1043,7 +543,6 @@ def partitionne(m_desc,m_class,n,s):
             (m_desc[m_desc[:,n]>s], m_class[m_desc[:,n]>s]))
 
 
-import graphviz as gv
 
 class NoeudNumerique:
     """ Classe pour représenter des noeuds numériques d'un arbre de décision
@@ -1219,7 +718,7 @@ class ClassifierArbreNumerique(Classifier):
     """ Classe pour représenter un classifieur par arbre de décision numérique
     """
     
-    def __init__(self, input_dimension, epsilon, LNoms=[]):
+    def __init__(self, input_dimension=1, epsilon=0.01, LNoms=[]):
         """ Constructeur
             Argument:
                 - intput_dimension (int) : dimension de la description des exemples
@@ -1227,7 +726,7 @@ class ClassifierArbreNumerique(Classifier):
                 - LNoms : Liste des noms de dimensions (si connues)
             Hypothèse : input_dimension > 0
         """
-        self.dimension = input_dimension
+        self.input_dimension = input_dimension
         self.epsilon = epsilon
         self.LNoms = LNoms
         # l'arbre est manipulé par sa racine qui sera un Noeud
@@ -1247,13 +746,13 @@ class ClassifierArbreNumerique(Classifier):
         """        
         self.racine = construit_AD_num(desc_set,label_set,self.epsilon,self.LNoms)
     
-    def score(self,x):
+    def score(self, X, y=None):
         """ rend le score de prédiction sur x (valeur réelle)
             x: une description
         """
         # cette méthode ne fait rien dans notre implémentation :
         pass
-    
+
     def predict(self, x):
         """ x (array): une description d'exemple
             rend la prediction sur x             
@@ -1283,5 +782,27 @@ class ClassifierArbreNumerique(Classifier):
             Cette fonction modifie GTree par effet de bord
         """
         self.racine.to_graph(GTree)
+
+    def fit(self, X, y):
+        """ Adaptation à la norme scikit-learn pour la compatibilité avec GridSearchCV
+        Arguments:
+            - X: ndarray des descriptions d'exemples
+            - y: ndarray des labels correspondants
+        """
+        self.train(X, y)
+
+    def get_params(self, deep=True):
+        return {
+            'input_dimension': self.input_dimension,
+            'epsilon': self.epsilon,
+            'LNoms': self.LNoms
+        }
+
+    def set_params(self, **params):
+        for param, value in params.items():
+            setattr(self, param, value)
+        return self
+
+
 # ---------------------------
 
