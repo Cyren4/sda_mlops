@@ -28,6 +28,7 @@ jobs:
 
       - name: Set GCP project 
         run: |
+          echo "PROJECT_ID: $PROJECT_ID"  # Add this line
           gcloud config set project $PROJECT_ID
 
       - name: Set up Cloud SDK
