@@ -68,7 +68,7 @@ def random_forest(run_ID, rf_model):
                 st.warning(f"⚠️ Erreur : La valeur d'accuracy '{accuracy}' dans le fichier n'est pas un nombre valide.")
             except PermissionError:
                 st.warning(f"⚠️ Erreur : Vous n'avez pas la permission de lire le fichier : {metrics_path}/accuracy")
-            except Exception as e:
+            except Exception as e : # pylint: disable=broad-except
                 st.warning(f"⚠️ Erreur inattendue : {e}")
 
         else:
