@@ -208,11 +208,39 @@ class ClassifierPerceptron(Classifier):
 
         return self
     
-    def predict_proba(self, x):
-        from scipy.special import softmax  # Import softmax for probability computation
-        """ Return the probabilities of each class for x """
-        scores = self.score(x)  # Get raw scores for the classes
-        return softmax(scores, axis=1)  # Apply softmax to convert to probabilities
+    def predict_proba(self, X):
+        """
+        Returns probability-like estimates for each class.
+        
+        Parameters:
+        -----------
+        X : array-like of shape (n_samples, input_dimension)
+            The input samples.
+            
+        Returns:
+        --------
+        proba : array of shape (n_samples, num_labels)
+            Probability-like estimates for each class.
+        """
+        # Handle both single sample and multiple samples
+        if X.ndim == 1:
+            scores = self.score(X)
+            # Convert scores to probability-like values using softmax
+            exp_scores = np.exp(scores - np.max(scores))  # Subtract max for numerical stability
+            probs = exp_scores / np.sum(exp_scores)
+            return probs.reshape(1, -1)
+        else:
+            # For multiple samples
+            n_samples = X.shape[0]
+            probs = np.zeros((n_samples, self.num_labels))
+            
+            for i, x in enumerate(X):
+                scores = self.score(x)
+                # Convert scores to probability-like values using softmax
+                exp_scores = np.exp(scores - np.max(scores))  # Subtract max for numerical stability
+                probs[i] = exp_scores / np.sum(exp_scores)
+                
+            return probs
 
 
 
