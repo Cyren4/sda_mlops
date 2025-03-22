@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/hoangthuyduongvu/Desktop/sda_mlops/src/models/mlruns/0/4ebc874c70bb458785c9800912fe0e41/artifacts
+end_time: null
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 4ebc874c70bb458785c9800912fe0e41
+run_name: sincere-wren-590
+run_uuid: 4ebc874c70bb458785c9800912fe0e41
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1742664926877
+status: 1
+tags: []
+user_id: hoangthuyduongvu

@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/hoangthuyduongvu/Desktop/sda_mlops/src/models/mlruns/0/e4c3007ce7b044368459fcd861b1cc0e/artifacts
+end_time: null
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: e4c3007ce7b044368459fcd861b1cc0e
+run_name: chill-slug-68
+run_uuid: e4c3007ce7b044368459fcd861b1cc0e
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1742663607967
+status: 1
+tags: []
+user_id: hoangthuyduongvu

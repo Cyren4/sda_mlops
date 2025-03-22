@@ -786,7 +786,11 @@ class ClassifierArbreNumerique(Classifier):
             x: une description
         """
         # cette méthode ne fait rien dans notre implémentation :
-        pass
+        if y is None:
+            raise ValueError("y cannot be None in score method")
+        
+        # Utiliser la méthode accuracy déjà implémentée
+        return self.accuracy(X, y)
 
     def predict(self, x):
         """ x (array): une description d'exemple
@@ -837,6 +841,37 @@ class ClassifierArbreNumerique(Classifier):
         for param, value in params.items():
             setattr(self, param, value)
         return self
+    
+
+
+    # Test
+    def predict_proba(self, X):
+        """ Calcule les probabilités de prédiction pour chaque classe sur l'ensemble X
+            X: ndarray avec des descriptions
+            Retourne: ndarray, tableau de probabilités pour chaque classe
+        """
+        import numpy as np
+        
+        if X.ndim == 1:
+            # Si X est un seul exemple (1D), on le reshape pour le traiter comme une matrice avec une ligne
+            X = X.reshape(1, -1)
+        
+        n_samples = X.shape[0]
+        
+        # Pour une classification binaire, on suppose que les classes sont 0 et 1
+        n_classes = 2
+        
+        # Initialisation du tableau de probabilités
+        proba = np.zeros((n_samples, n_classes))
+        
+        # Pour chaque exemple, prédire la classe
+        for i, x in enumerate(X):
+            predicted_class = self.predict(x)
+            # Si la classe prédite est 1, la probabilité pour la classe 1 est 1.0
+            # Si la classe prédite est 0, la probabilité pour la classe 0 est 1.0
+            proba[i, int(predicted_class)] = 1.0
+        
+        return proba
 
 
 # ---------------------------
