@@ -30,6 +30,8 @@ cd sda_mlops
 ```shell
 conda env create -f environment.yml
 conda activate banking-mlops
+conda env update --file environment.yml --name banking-mlops --prune 
+
 ```
 
 3.  Launch streamlit application : 
