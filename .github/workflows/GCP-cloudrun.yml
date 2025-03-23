@@ -37,6 +37,7 @@ env:
   PROJECT_ID: 'appmod-demo-lvl'
   REGION: 'europe-west1'
   SERVICE: 'banking-mlops-app'
+  IMAGE: 'mlops-app'
   WORKLOAD_IDENTITY_PROVIDER: 'projects/916045951000/locations/global/workloadIdentityPools/github/providers/my-repo'
 
 jobs:
@@ -73,7 +74,7 @@ jobs:
 
       - name: 'Build and Push Container'
         run: |-
-          DOCKER_TAG="${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.SERVICE }}:latest"
+          DOCKER_TAG="${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.SERVICE }}/${{ env.IMAGE }}:latest"
           docker build --tag "${DOCKER_TAG}" .
           docker push "${DOCKER_TAG}"
 
@@ -84,7 +85,7 @@ jobs:
           region: '${{ env.REGION }}'
           project_id: '${{ env.PROJECT_ID }}'
           # allow_unauthenticated: true
-          image: '${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.SERVICE }}:latest' # Use latest tag
+          image: '${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.SERVICE }}/${{ env.IMAGE }}:latest' # Use latest tag
 
       - name: 'Show output'
         run: |
