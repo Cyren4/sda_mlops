@@ -99,7 +99,7 @@ gcloud run deploy banking-mlops --image $REGION-docker.pkg.dev/$PROJECT_ID/banki
 gcloud iam service-accounts keys create
 ```
 
-3. Create Secrets in Github Action :
+3. Create Secrets in Github Action : (not used yet)
 - Service Account key : ```GCP_SA_KEY```
 - Project ID : ```GCP_PROJECT_ID```
 - Region : ```GCP_REGION```
