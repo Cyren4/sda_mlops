@@ -62,6 +62,7 @@ jobs:
         uses: 'google-github-actions/auth@f112390a2df9932162083945e46d439060d66ec2' # google-github-actions/auth@v2
         with:
           workload_identity_provider: '${{ env.WORKLOAD_IDENTITY_PROVIDER }}'
+
       - name: Google Cloud Auth Service Account
         uses: 'google-github-actions/auth@v2'
         with:
@@ -93,6 +94,7 @@ jobs:
           service: '${{ env.SERVICE }}'
           region: '${{ env.REGION }}'
           project_id: '${{ env.PROJECT_ID }}'
+          allow_unauthenticated: true
           # NOTE: If using a pre-built image, update the image name below:
 
           image: 'europe-west1-docker.pkg.dev/appmod-demo-lvl/banking-mlops/mlops-apps@sha256:484a105f786fb5accc31e553140943afaa72a8682653803c2a5cac05f68e036f'
