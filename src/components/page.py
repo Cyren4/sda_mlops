@@ -8,24 +8,34 @@ from components.perceptron import perceptron
 from components.tree import arbre
 
 
-def select_page(page, run_ID=None):
+def get_runID(page):
+    if page == "🌲 Modèle Random Forest":
+        return "e4631371ac2544b587164e4f9074f25a" , "/src/mlruns/0/e4631371ac2544b587164e4f9074f25a/artifacts/random_forest_model"
+    elif page == "Perceptron de Rosenblatt":
+        return "e4631371ac2544b587164e4f9074f25a" , "/src/mlruns/0/e4631371ac2544b587164e4f9074f25a/artifacts/random_forest_model" 
+    elif page == "Arbre de Décision":
+        return "e4631371ac2544b587164e4f9074f25a" , "/src/mlruns/0/e4631371ac2544b587164e4f9074f25a/artifacts/random_forest_model"
+    return "e4631371ac2544b587164e4f9074f25a" , "/src/mlruns/0/e4631371ac2544b587164e4f9074f25a/artifacts/random_forest_model" 
+
+def select_page(page):
     """Select the page to display based on the user's selection."""
     # Get dynamic path
-    path_mlrun = os.getcwd() + "/src/mlruns/0/" 
-    model_URI = f"{path_mlrun}{run_ID}/artifacts/random_forest_model"
+    pwd = os.getcwd() 
+    # default value
 
     if page == "🏦 Introduction":
         introduction()
     elif page == "📈 Modèle LSTM":
         lstm()
-    elif page == "🌲 Modèle Random Forest":
-        random_forest(run_ID, load_model(model_URI))
-
-    elif page == "Perceptron de Rosenblatt":
-        perceptron(run_ID, load_model(model_URI))
-
-    elif page == "Arbre de Décision":
-        arbre(run_ID, load_model(model_URI))
+    elif page == "🏕️ Modèle Random Forest":
+        run_ID, model_URI = get_runID(page)
+        random_forest(run_ID, load_model(pwd + model_URI))
+    elif page == "🌹 Perceptron de Rosenblatt":
+        run_ID, model_URI = get_runID(page)
+        perceptron(run_ID, load_model(pwd + model_URI))
+    elif page == "🌲 Arbre de Décision":
+        run_ID, model_URI = get_runID(page)
+        arbre(run_ID, load_model(pwd + model_URI))
 
 # === CHARGER LE MODÈLE RANDOM FOREST MLflow ===
 @st.cache_resource

@@ -9,13 +9,19 @@ from components.page import select_page
 def main():
     """Main function to run the Streamlit app."""
     # === CONFIGURATION MLflow === 
-    run_ID = "e4631371ac2544b587164e4f9074f25a"  # Remplace par l'ID de ton modèle correct 
+    # run_ID = "e4631371ac2544b587164e4f9074f25a"  # Remplace par l'ID de ton modèle correct 
     page_config()
     display_header()
     # === BARRE DE NAVIGATION ===
     st.sidebar.title("Navigation")
-    main_page = st.sidebar.radio("Sélectionner une section", ["🏦 Introduction", "📈 Modèle LSTM", "🌲 Modèle Random Forest", "Perceptron de Rosenblatt", "Arbre de Décision"])
-    select_page(main_page, run_ID)
+    main_page = st.sidebar.radio("Sélectionner une section",
+                                  ["🏦 Introduction", 
+                                   "📈 Modèle LSTM", 
+                                   "🏕️ Modèle Random Forest", 
+                                   "🌹 Perceptron de Rosenblatt", 
+                                   "🌲 Arbre de Décision"])
+    # select_page(main_page, run_ID)
+    select_page(main_page)
     display_contributor()
     
 
