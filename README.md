@@ -148,3 +148,4 @@ This project is a student project fulfilling the requirements of a MLOps Course.
 
 ## Source documentation
 - [Run conda in Dockerfile](https://pythonspeed.com/articles/activate-conda-dockerfile/) 
+- [Identity federation on gcp & github action](https://github.com/google-github-actions/auth#preferred-direct-workload-identity-federation)
