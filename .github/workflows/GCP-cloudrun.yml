@@ -34,13 +34,11 @@ on:
       - main
 
 env:
-  PROJECT_ID: 'appmod-demo-lvl'
-  REGION: 'europe-west1'
+  PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+  REGION: ${{ secrets.GCP_REGION }}
   SERVICE: 'banking-mlops-app'
-  IMAGE: 'mlops-app'
-  TEST_SERVICE: 'test-app'
-  TEST_IMAGE_TAG: 'test'
-  WORKLOAD_IDENTITY_PROVIDER: 'projects/916045951000/locations/global/workloadIdentityPools/github/providers/my-repo'
+  IMAGE_TAG: 'mlops-app'
+  WORKLOAD_IDENTITY_PROVIDER:  ${{ secrets.GCP_WORKLOAD_IDENTITY }}
 
 jobs:
   deploy:
@@ -69,14 +67,14 @@ jobs:
       # BEGIN - Docker auth and build
       - name: 'Build and Push Container (Test Image)'
         run: |-
-          TEST_DOCKER_TAG="${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.SERVICE }}/${{ env.TEST_IMAGE_TAG }}:latest"
-          gcloud builds submit --tag "${TEST_DOCKER_TAG}" .
+          DOCKER_TAG="${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.SERVICE }}/${{ env.IMAGE_TAG }}:latest"
+          gcloud builds submit --tag "${DOCKER_TAG}" .
 
       - name: 'Deploy to Cloud Run (Test App)'
         run: |-
-          TEST_DOCKER_TAG="${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.SERVICE }}/${{ env.TEST_IMAGE_TAG }}:latest"
-          gcloud run deploy "${{ env.TEST_SERVICE }}" --image "${TEST_DOCKER_TAG}" --region "${{ env.REGION }}" --allow-unauthenticated
+          DOCKER_TAG="${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.SERVICE }}/${{ env.IMAGE_TAG }}:latest"
+          gcloud run deploy "${{ env.SERVICE }}" --image "${DOCKER_TAG}" --region "${{ env.REGION }}" --allow-unauthenticated
 
       - name: 'Show output'
         run: |
-          gcloud run services describe ${{ env.TEST_SERVICE }} --region ${{ env.REGION }} --format="value(status.url)"
+          gcloud run services describe ${{ env.SERVICE }} --region ${{ env.REGION }} --format="value(status.url)"

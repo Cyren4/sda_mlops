@@ -81,18 +81,20 @@ gcloud auth configure-docker $REGION-docker.pkg.dev
 
 - Build and push the Docker image to Artifact Registry:
 ```bash
-gcloud builds submit --tag  $REGION-docker.pkg.dev/$PROJECT_ID/banking-mlops/mlops-app:latest
+# gcloud builds submit --tag  $REGION-docker.pkg.dev/$PROJECT_ID/banking-mlops/mlops-app:latest
+gcloud builds submit --tag europe-west1-docker.pkg.dev/appmod-demo-lvl/banking-mlops-app/test:latest
 ```
 
 - Deploy the Docker image to Cloud Run:
 ```bash
-gcloud run deploy banking-mlops --image $REGION-docker.pkg.dev/$PROJECT_ID/banking-mlops/mlops-app:latest --region $REGION
+# gcloud run deploy banking-mlops --image $REGION-docker.pkg.dev/$PROJECT_ID/banking-mlops/mlops-app:latest --region $REGION
+gcloud run deploy test-app --image europe-west1-docker.pkg.dev/appmod-demo-lvl/banking-mlops-app/test:latest --region europe-west1 --allow-unauthenticated
 ```
 
 ## Automatic Deployement to Cloud Run 
 
-1. Create Service Account on GCP
--   **banking-mlops-sa** - banking-mlops-sa@appmod-demo-lvl.iam.gserviceaccount.com
+1. Create Service Account on GCP with the admin role for Artifact Registry, Cloud Run and Service Account User:
+-   **sa-banking-mlops** - sa-banking-mlops@appmod-demo-lvl.iam.gserviceaccount.com
 
 2. Add private key for service account (from console or cli) it will give permission to Github Action to push new services to GCP : 
 ```bash
@@ -105,7 +107,7 @@ gcloud iam service-accounts keys create
 - Region : ```GCP_REGION```
 - Service Name : ```GCP_SERVICE_NAME```
 
-4. Create Github Action pipeline in **.github/workflows/gcp-cicd-deployement.yml**  
+4. Create Github Action pipeline in **.github/workflows/GCP-cloudrun.yml**  
 
 5. Push modification in the main branch
  
@@ -114,7 +116,8 @@ gcloud iam service-accounts keys create
 ```
 ├── README.md
 ├── .github/workflows
-│   └── github-cicd.py
+│   ├── GCP-cloudrun.yml
+│   └── github-cicd.yml
 ├── data
 │   ├── feature_importances.csv
 │   ├── Loan_Data.csv
@@ -126,11 +129,13 @@ gcloud iam service-accounts keys create
 │   │   ├── header.py
 │   │   ├── introduction.py
 │   │   ├── lstm.py
+│   │   ├── perceptron.py
+│   │   ├── random_forest.py
+│   │   ├── tree.py
 │   │   ├── page.py
 │   │   └── random_forest.py
-│   └── models
-│       ├── Mlflow.ipynb
-│       └── Preprocessing.ipynb
+│   ├── mlruns/*
+│   └── models/*
 ├── .dockerignore.ipynb
 └── .gitignore.ipynb
 ```
