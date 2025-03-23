@@ -87,6 +87,7 @@ jobs:
         with:
           service: '${{ env.SERVICE }}'
           region: '${{ env.REGION }}'
+          project: '${{ env.PROJECT_ID }}'
           # NOTE: If using a pre-built image, update the image name below:
 
           image: 'europe-west1-docker.pkg.dev/appmod-demo-lvl/banking-mlops/mlops-apps@sha256:484a105f786fb5accc31e553140943afaa72a8682653803c2a5cac05f68e036f'
