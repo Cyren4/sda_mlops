@@ -38,6 +38,8 @@ env:
   REGION: 'europe-west1'
   SERVICE: 'banking-mlops-app'
   IMAGE: 'mlops-app'
+  TEST_SERVICE: 'test-app'
+  TEST_IMAGE_TAG: 'test'
   WORKLOAD_IDENTITY_PROVIDER: 'projects/916045951000/locations/global/workloadIdentityPools/github/providers/my-repo'
 
 jobs:
@@ -65,28 +67,16 @@ jobs:
           project_id: '${{ env.PROJECT_ID }}'
 
       # BEGIN - Docker auth and build
-      - name: 'Docker Auth'
-        uses: 'docker/login-action@9780b0c442fbb1117ed29e0efdff1e18412f7567' # docker/login-action@v3
-        with:
-          username: 'oauth2accesstoken'
-          password: '${{ steps.auth.outputs.auth_token }}'
-          registry: '${{ env.REGION }}-docker.pkg.dev'
-
-      - name: 'Build and Push Container'
+      - name: 'Build and Push Container (Test Image)'
         run: |-
-          DOCKER_TAG="${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.SERVICE }}/${{ env.IMAGE }}:latest"
-          docker build --tag "${DOCKER_TAG}" .
-          docker push "${DOCKER_TAG}"
+          TEST_DOCKER_TAG="${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.SERVICE }}/${{ env.TEST_IMAGE_TAG }}:latest"
+          gcloud builds submit --tag "${TEST_DOCKER_TAG}" .
 
-      - name: 'Deploy to Cloud Run'
-        uses: 'google-github-actions/deploy-cloudrun@33553064113a37d688aa6937bacbdc481580be17' # google-github-actions/deploy-cloudrun@v2
-        with:
-          service: '${{ env.SERVICE }}'
-          region: '${{ env.REGION }}'
-          project_id: '${{ env.PROJECT_ID }}'
-          # allow_unauthenticated: true
-          image: '${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.SERVICE }}/${{ env.IMAGE }}:latest' # Use latest tag
+      - name: 'Deploy to Cloud Run (Test App)'
+        run: |-
+          TEST_DOCKER_TAG="${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.SERVICE }}/${{ env.TEST_IMAGE_TAG }}:latest"
+          gcloud run deploy "${{ env.TEST_SERVICE }}" --image "${TEST_DOCKER_TAG}" --region "${{ env.REGION }}" --allow-unauthenticated
 
       - name: 'Show output'
         run: |
-          echo ${{ steps.deploy.outputs.url }}
+          gcloud run services describe ${{ env.TEST_SERVICE }} --region ${{ env.REGION }} --format="value(status.url)"
