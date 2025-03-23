@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import os
 
-def perceptron(run_ID, perceptron):
+def perceptron(run_ID, p):
     """Displays the main page of the app."""
     st.header("Perceptron de Rosenblatt - Analyse des performances")
 
@@ -11,27 +11,8 @@ def perceptron(run_ID, perceptron):
     if rf_page == "Performance de Perceptron de Rosenblatt":
         # Charger les métriques sauvegardées
         st.subheader("Performance de Perceptron de Rosenblatt")
-        artifacts_path = f"{os.getcwd()}/src/models/mlruns_perceptron/0/{run_ID}/artifacts" 
-        metrics_path = f"{os.getcwd()}/src/models/mlruns_perceptron/0/{run_ID}/metrics"
-
-        if os.path.exists(f"{metrics_path}/accuracy"):
-            try:
-                with open(f"{metrics_path}/accuracy_perceptrion", "r", encoding="utf-8") as file:
-                    content = file.read().strip()
-                    accuracy = float(content.split()[1])
-                    st.metric("Accuracy", f"{accuracy:.2%}")
-            except FileNotFoundError:
-                st.warning(f"Erreur : Le fichier accuracy est introuvable à l'emplacement : {metrics_path}/accuracy")
-            except IndexError:
-                st.warning(f"Erreur : Le fichier accuracy est vide ou mal formaté. Contenu : {content}")
-            except ValueError:
-                st.warning(f"Erreur : La valeur d'accuracy '{accuracy}' dans le fichier n'est pas un nombre valide.")
-            except PermissionError:
-                st.warning(f"Erreur : Vous n'avez pas la permission de lire le fichier : {metrics_path}/accuracy")
-            except Exception as e:
-                st.warning(f"Erreur inattendue : {e}")
-        else:
-            st.write("Le fichier accuracy est introuvable.")
+        artifacts_path = f"{os.getcwd()}/src/models/mlruns_perceptron/986589959954045561/{run_ID}/artifacts" 
+        metrics_path = f"{os.getcwd()}/src/models/mlruns_perceptron/986589959954045561/{run_ID}/metrics"
 
         # Affichage des images enregistrées dans MLflow
         st.subheader("Matrice de Confusion")
@@ -62,6 +43,10 @@ def perceptron(run_ID, perceptron):
         else:
             st.warning("Validation croisée sur perceptron introuvable : " + cross_val_path)
 
+
+
+
+
     elif rf_page == "Prédiction de Perceptron de Rosenblatt":
         st.title("Prédiction du défaut de paiement - Perceptron de Rosenblatt")
         st.markdown("Remplissez les informations du client pour obtenir une prédiction.")
@@ -73,6 +58,7 @@ def perceptron(run_ID, perceptron):
         years_employed = st.number_input("Années d'emploi", min_value=0, max_value=50, value=5)
         fico_score = st.slider("Score FICO", min_value=300, max_value=850, value=600)
 
+        import numpy as np
         input_data = pd.DataFrame({
             "credit_lines_outstanding": [credit_lines_outstanding],
             "loan_amt_outstanding": [loan_amt_outstanding],
@@ -81,9 +67,8 @@ def perceptron(run_ID, perceptron):
             "years_employed": [years_employed],
             "fico_score": [fico_score]
         })
-
         if st.button("Prédire le défaut de paiement"):
-            prediction = perceptron.predict(input_data)
+            prediction = [p.predict(np.array(input_data)[i]) for i in range(len(input_data))]
             resultat = "Risque de défaut de paiement !" if prediction[0] == 1 else "Aucun risque détecté."
             st.subheader("Résultat de la prédiction")
             st.write(resultat)
