@@ -1,6 +1,27 @@
 import streamlit as st
 import pandas as pd
 import os
+##
+from arize.pandas.logger import Client, Schema
+from arize.utils.types import ModelTypes, Environments
+##
+from dotenv import load_dotenv
+load_dotenv()
+import datetime
+
+ARIZE_SPACE_ID=os.getenv("SPACE_ID")
+ARIZE_API_KEY = os.getenv("API_KEY") 
+
+
+
+# Define the schema for your data
+schema = Schema(
+    prediction_id_column_name="customer_id",
+    timestamp_column_name="timestamp",
+    feature_column_names=["credit_lines_outstanding", "years_employed", "fico_score", "total_debt_outstanding", "income", "loan_amt_outstanding"],
+    prediction_label_column_name="prediction_label",
+    actual_label_column_name="actual_label"
+)
 
 # === PAGE 3 : MODÈLE RANDOM FOREST ===
 def random_forest(run_ID, rf_model):
@@ -8,6 +29,9 @@ def random_forest(run_ID, rf_model):
     st.header("🌲 Modèle Random Forest - Analyse des performances")
 
     rf_page = st.sidebar.radio("Sous-section", ["📊 Performance Random Forest", "🤖 Prédiction Random Forest"])
+
+    # Initialize Arize client with your space key and api key
+    arize_client = Client(space_id=ARIZE_SPACE_ID, api_key=ARIZE_API_KEY)
 
     if rf_page == "📊 Performance Random Forest":
         # Charger les métriques sauvegardées
@@ -70,7 +94,7 @@ def random_forest(run_ID, rf_model):
 
 
     elif rf_page == "🤖 Prédiction Random Forest":
-        st.title("🤖 Prédiction du défaut de paiement - Random Forest")
+        st.header("🤖 Prédiction du défaut de paiement - Random Forest")
 
         st.markdown("**Remplissez les informations du client pour obtenir une prédiction.**")
 
@@ -82,6 +106,9 @@ def random_forest(run_ID, rf_model):
         years_employed = st.number_input("Années d'emploi", min_value=0, max_value=50, value=5)
         fico_score = st.slider("Score FICO", min_value=300, max_value=850, value=600)
 
+        # Assume you have actual labels available for evaluation
+        actual_label = st.number_input("Defaut de paiement (1: Yes, 0: No)", min_value=0, max_value=1, value=1)
+
         # Transformer les entrées en DataFrame
         input_data = pd.DataFrame({
             "credit_lines_outstanding": [credit_lines_outstanding],
@@ -89,7 +116,8 @@ def random_forest(run_ID, rf_model):
             "total_debt_outstanding": [total_debt_outstanding],
             "income": [income],
             "years_employed": [years_employed],
-            "fico_score": [fico_score]
+            "fico_score": [fico_score],
+            "actual_label": [actual_label]
         })
         
         # Assurez-vous que les données ont les bons types
@@ -99,7 +127,8 @@ def random_forest(run_ID, rf_model):
             "total_debt_outstanding": "float64",
             "income": "float64",
             "years_employed": "int64",
-            "fico_score": "int64"
+            "fico_score": "int64",
+            "actual_label": "int64"
         })
 
         # Bouton pour prédire
@@ -108,4 +137,41 @@ def random_forest(run_ID, rf_model):
             resultat = "⚠️ Risque de défaut de paiement !" if prediction[0] == 1 else "✅ Aucun risque détecté."
             st.subheader("Résultat de la prédiction")
             st.write(resultat)
+
+            # Log the prediction to Arize
+            timestamp = pd.Timestamp.now()
+            
+            # Log the prediction to Arize
+            data = {
+                "customer_id": [str(timestamp.timestamp())],  # Unique ID for each prediction
+                "timestamp": [timestamp],
+                "credit_lines_outstanding": [credit_lines_outstanding],
+                "loan_amt_outstanding": [loan_amt_outstanding],
+                "total_debt_outstanding": [total_debt_outstanding],
+                "income": [income],
+                "years_employed": [years_employed],
+                "fico_score": [fico_score],
+                "prediction_label": [prediction[0]],
+                "actual_label": [actual_label]             
+            }
+            dataframe = pd.DataFrame(data)
+            
+            try: 
+                response = arize_client.log(
+                    dataframe = dataframe,
+                    model_id="random_forest",
+                    model_version="v1",
+                    model_type=ModelTypes.SCORE_CATEGORICAL,
+                    environment=Environments.PRODUCTION,
+                    #features=features,
+                    #prediction_label = [int(prediction[0])],
+                    schema=schema
+                )
+
+                if response.status_code != 200:
+                    print(f"Failed to log data to Arize: {response.text}")
+                else:
+                    print("Successfully logged data to Arize")
+            except Exception as e:
+                print(f"An error occured: {e}")
 

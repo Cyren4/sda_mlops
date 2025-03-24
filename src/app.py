@@ -1,6 +1,5 @@
 # import libraries
-import streamlit as st
-
+import streamlit as st 
 # Import custom components
 from components.header import display_header, display_contributor, page_config
 from components.page import select_page
@@ -8,8 +7,8 @@ from components.page import select_page
 # === CONFIGURATION DE LA PAGE ===
 def main():
     """Main function to run the Streamlit app."""
+    
     # === CONFIGURATION MLflow === 
-    # run_ID = "e4631371ac2544b587164e4f9074f25a"  # Remplace par l'ID de ton modèle correct 
     page_config()
     display_header()
     # === BARRE DE NAVIGATION ===
