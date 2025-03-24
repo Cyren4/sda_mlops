@@ -13,16 +13,10 @@ from components.tree import arbre
 def get_runID(page):
     if page == "🌲 Modèle Random Forest":
         return "e4631371ac2544b587164e4f9074f25a" , "/src/mlruns/0/e4631371ac2544b587164e4f9074f25a/artifacts/random_forest_model"
-    
-
     elif page == "🌹 Perceptron de Rosenblatt":
         return "c4652bfb24de4838b80406966bb74891" , "/src/models/mlruns_perceptron/986589959954045561/c4652bfb24de4838b80406966bb74891/artifacts/perceptron" 
-    
-
-
     elif page == "🌲 Arbre de Décision":
         return "d53bb01c8a9f4c648839817a5a3837ea" , "/src/models/mlruns_tree/961169546191155350/d53bb01c8a9f4c648839817a5a3837ea/artifacts/tree"
-    
     # LSTM
     return "e4631371ac2544b587164e4f9074f25a" , "/src/mlruns/0/e4631371ac2544b587164e4f9074f25a/artifacts/random_forest_model" 
 
@@ -43,10 +37,7 @@ def select_page(page):
         import iads as iads
         p = iads.Classifiers.ClassifierPerceptron(6, learning_rate=0.01, init=True)
         run_ID, model_URI = get_runID(page)
-
         perceptron(run_ID, p)
-
-        
     elif page == "🌲 Arbre de Décision":
         import iads as iads
         a = iads.Classifiers.ClassifierArbreNumerique(epsilon=0.0, input_dimension=7)
