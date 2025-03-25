@@ -25,13 +25,18 @@ def display_header():
     
 
 def display_contributor():
-    """Displays the header section of the app."""
-    st.subheader("""Contributors :
-- *Cyrena Ramdani*
-- *Yoav COHEN*
-- *Hoang Thuy Duong VU*
-- *Salma LAHBATI*
-""")
+    """Displays the contributors section of the app."""
+    
+    st.markdown("""
+                
+    ---
+
+    ### 👩🏻‍💻 **Contributors** :
+    - *Cyrena Ramdani*
+    - *Yoav COHEN*
+    - *Hoang Thuy Duong VU*
+    - *Salma LAHBATI*  
+                """)
 
 
 # Page congig 
