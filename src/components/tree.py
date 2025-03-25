@@ -1,8 +1,15 @@
 import streamlit as st
 import pandas as pd
+import numpy as np
 import os
+##
+from arize.utils.types import ModelTypes, Environments
+##
+from dotenv import load_dotenv
+load_dotenv()
+import datetime
 
-def arbre(run_ID, tree):
+def arbre(run_ID, tree, arize_client, schema):
     """Displays the main page of the app."""
     st.header("Arbre de décision - Analyse des performances")
 
@@ -66,6 +73,9 @@ def arbre(run_ID, tree):
         fico_score = st.slider("Score FICO", min_value=300, max_value=850, value=600)
         total_debt_outstanding_ratio = total_debt_outstanding
 
+        # Assume you have actual labels available for evaluation
+        actual_label = st.number_input("Defaut de paiement (1: Yes, 0: No)", min_value=0, max_value=1, value=1)
+
         input_data = pd.DataFrame({
             "credit_lines_outstanding": [credit_lines_outstanding],
             "loan_amt_outstanding": [loan_amt_outstanding],
@@ -75,10 +85,46 @@ def arbre(run_ID, tree):
             "fico_score": [fico_score],
             "total_debt_outstanding_ratio": [total_debt_outstanding_ratio],
         })
-        import numpy as np
+        
 
         if st.button("Prédire le défaut de paiement"):
             prediction = [tree.predict(np.array(input_data)[i]) for i in range(len(input_data))]
             resultat = "Risque de défaut de paiement !" if prediction[0] == 1 else "Aucun risque détecté."
             st.subheader("Résultat de la prédiction")
             st.write(resultat)
+               # Log the prediction to Arize
+            timestamp = pd.Timestamp.now()
+            
+            # Log the prediction to Arize
+            data = {
+                "customer_id": [str(timestamp.timestamp())],  # Unique ID for each prediction
+                "timestamp": [timestamp],
+                "credit_lines_outstanding": [credit_lines_outstanding],
+                "loan_amt_outstanding": [loan_amt_outstanding],
+                "total_debt_outstanding": [total_debt_outstanding],
+                "income": [income],
+                "years_employed": [years_employed],
+                "fico_score": [fico_score],
+                "prediction_label": [prediction[0]],
+                "actual_label": [actual_label]             
+            }
+            dataframe = pd.DataFrame(data)
+            
+            try: 
+                response = arize_client.log(
+                    dataframe = dataframe,
+                    model_id="arbre_de_decision",
+                    model_version="v1",
+                    model_type=ModelTypes.SCORE_CATEGORICAL,
+                    environment=Environments.PRODUCTION,
+                    #features=features,
+                    #prediction_label = [int(prediction[0])],
+                    schema=schema
+                )
+
+                if response.status_code != 200:
+                    print(f"Failed to log data to Arize: {response.text}")
+                else:
+                    print("Successfully logged data to Arize")
+            except Exception as e:
+                print(f"An error occured: {e}")
