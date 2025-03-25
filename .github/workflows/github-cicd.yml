@@ -53,7 +53,7 @@ jobs:
         # Performs linting on the specified Python files using Pylint.
         - name: Lint
           run: |
-            LINT_FILES="src/app.py src/components/header.py src/components/page.py"
+            LINT_FILES="src/components/header.py src/components/introduction.py src/components/random_forest.py src/components/perceptron.py src/components/tree.py"
             pylint --disable=R,C $LINT_FILES 
 
         # # Example of a test step (commented out).
