@@ -2,36 +2,18 @@ import streamlit as st
 import pandas as pd
 import os
 ##
-from arize.pandas.logger import Client, Schema
 from arize.utils.types import ModelTypes, Environments
 ##
 from dotenv import load_dotenv
 load_dotenv()
-import datetime
 
-ARIZE_SPACE_ID=os.getenv("SPACE_ID")
-ARIZE_API_KEY = os.getenv("API_KEY") 
-
-
-
-# Define the schema for your data
-schema = Schema(
-    prediction_id_column_name="customer_id",
-    timestamp_column_name="timestamp",
-    feature_column_names=["credit_lines_outstanding", "years_employed", "fico_score", "total_debt_outstanding", "income", "loan_amt_outstanding"],
-    prediction_label_column_name="prediction_label",
-    actual_label_column_name="actual_label"
-)
 
 # === PAGE 3 : MODÈLE RANDOM FOREST ===
-def random_forest(run_ID, rf_model):
+def random_forest(run_ID, rf_model, arize_client, schema):
     """Displays the main page of the app."""
     st.header("🌲 Modèle Random Forest - Analyse des performances")
 
     rf_page = st.sidebar.radio("Sous-section", ["📊 Performance Random Forest", "🤖 Prédiction Random Forest"])
-
-    # Initialize Arize client with your space key and api key
-    arize_client = Client(space_id=ARIZE_SPACE_ID, api_key=ARIZE_API_KEY)
 
     if rf_page == "📊 Performance Random Forest":
         # Charger les métriques sauvegardées
@@ -172,6 +154,6 @@ def random_forest(run_ID, rf_model):
                     print(f"Failed to log data to Arize: {response.text}")
                 else:
                     print("Successfully logged data to Arize")
-            except Exception as e:
+            except Exception as e: # pylint: disable=broad-except
                 print(f"An error occured: {e}")
 
