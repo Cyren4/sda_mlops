@@ -6,7 +6,6 @@ from arize.utils.types import ModelTypes, Environments
 ##
 from dotenv import load_dotenv
 load_dotenv()
-import datetime
 
 
 # === PAGE 3 : MODÈLE RANDOM FOREST ===
@@ -155,6 +154,6 @@ def random_forest(run_ID, rf_model, arize_client, schema):
                     print(f"Failed to log data to Arize: {response.text}")
                 else:
                     print("Successfully logged data to Arize")
-            except Exception as e:
+            except Exception as e: # pylint: disable=broad-except
                 print(f"An error occured: {e}")
 

@@ -7,7 +7,6 @@ from arize.utils.types import ModelTypes, Environments
 ##
 from dotenv import load_dotenv
 load_dotenv()
-import datetime
 
 def arbre(run_ID, tree, arize_client, schema):
     """Displays the main page of the app."""
@@ -18,8 +17,6 @@ def arbre(run_ID, tree, arize_client, schema):
     if rf_page == "Performance de Arbre de décision":
         # Charger les métriques sauvegardées
         artifacts_path = f"{os.getcwd()}/src/models/mlruns_tree/961169546191155350/{run_ID}/artifacts" 
-        metrics_path = f"{os.getcwd()}/src/models/mlruns_tree/961169546191155350/{run_ID}/metrics"
-
 
         st.subheader("Tree structure")
         roc_path = f"{artifacts_path}/arbre.png"
@@ -126,5 +123,5 @@ def arbre(run_ID, tree, arize_client, schema):
                     print(f"Failed to log data to Arize: {response.text}")
                 else:
                     print("Successfully logged data to Arize")
-            except Exception as e:
+            except Exception as e: # pylint: disable=broad-except
                 print(f"An error occured: {e}")

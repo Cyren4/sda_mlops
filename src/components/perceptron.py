@@ -7,7 +7,6 @@ from arize.utils.types import ModelTypes, Environments
 ##
 from dotenv import load_dotenv
 load_dotenv()
-import datetime
 
 
 
@@ -21,7 +20,6 @@ def perceptron(run_ID, p, arize_client, schema):
         # Charger les métriques sauvegardées
         st.subheader("Performance de Perceptron de Rosenblatt")
         artifacts_path = f"{os.getcwd()}/src/models/mlruns_perceptron/986589959954045561/{run_ID}/artifacts" 
-        metrics_path = f"{os.getcwd()}/src/models/mlruns_perceptron/986589959954045561/{run_ID}/metrics"
 
         # Affichage des images enregistrées dans MLflow
         st.subheader("Matrice de Confusion")
@@ -118,6 +116,6 @@ def perceptron(run_ID, p, arize_client, schema):
                     print(f"Failed to log data to Arize: {response.text}")
                 else:
                     print("Successfully logged data to Arize")
-            except Exception as e:
+            except Exception as e: # pylint: disable=broad-except
                 print(f"An error occured: {e}")
 
